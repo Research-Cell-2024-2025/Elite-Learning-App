@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:elite/parent/announcements.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:elite/parent/attendance.dart';
@@ -22,7 +23,7 @@ class _ParentModuleState extends State<ParentModule> {
       title: 'Announcements',
       icon: Icons.add_alert,
       color: Colors.purple,
-      route: Events(),
+      route: parentAnnouncements(),
     ),
     ModuleItem(
       title: 'Gallery',
