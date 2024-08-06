@@ -1,47 +1,35 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-class Gallery extends StatelessWidget {
+class Gallery extends StatefulWidget {
+  const Gallery({super.key});
+
+  @override
+  State<Gallery> createState() => _GalleryState();
+}
+
+class _GalleryState extends State<Gallery> {
+  late final WebViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..loadRequest(
+        Uri.parse('https://www.instagram.com/research_sakec?igsh=NTc4MTIwNjQ2YQ%3D%3D'),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: Text('Gallery'),
+        title: const Text('Gallery'),
         backgroundColor: Colors.purple,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('gallery').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            final documents = snapshot.data!.docs;
-            return PageView.builder(
-              itemCount: documents.length,
-              itemBuilder: (context, index) {
-                final data = documents[index].data() as Map<String, dynamic>?;
-                final filename = data?['filename'] as String?;
-
-                return filename != null
-                    ? Card(
-                  elevation: 4.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Image.memory(
-                    base64Decode(filename),
-                    fit: BoxFit.cover,
-                  ),
-                )
-                    : Center(child: Text('No Image'));
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return Center(child: Text('No data available'));
-          }
-        },
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }
