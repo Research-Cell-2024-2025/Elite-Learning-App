@@ -6,6 +6,7 @@ import '../login_page.dart';
 import 'Studentform.dart';
 import 'display.dart';
 import 'package:elite/admin/Studentform.dart';
+import 'package:elite/admin/addFeespage.dart';
 
 class HomePage extends StatelessWidget {
   final bool isAdmin;
@@ -86,6 +87,13 @@ class HomePage extends StatelessWidget {
                 title: Text('Add Images'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Images()));
+                }
+            ),
+            ListTile(
+                leading: Icon(Icons.add),
+                title: Text('Add a Student Fee'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddFeesPage()));
                 }
             ),
           ],
