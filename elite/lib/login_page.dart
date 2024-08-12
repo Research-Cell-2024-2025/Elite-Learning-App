@@ -109,10 +109,12 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/eliteimg.jpg'),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),

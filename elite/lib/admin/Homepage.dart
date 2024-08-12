@@ -1,4 +1,5 @@
 import 'package:elite/admin/addEvent.dart';
+import 'package:elite/admin/addTimetable.dart';
 import 'package:elite/admin/announcements.dart';
 import 'package:elite/admin/carouselimg.dart';
 import 'package:flutter/material.dart';
@@ -75,17 +76,24 @@ class HomePage extends StatelessWidget {
               }
             ),
              ListTile(
-              leading: Icon(Icons.add),
+              leading: Icon(Icons.event),
               title: Text('Add Event'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddEvents()));
               }
             ),
             ListTile(
-                leading: Icon(Icons.add),
+                leading: Icon(Icons.image),
                 title: Text('Add Images'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Images()));
+                }
+            ),
+            ListTile(
+                leading: Icon(Icons.access_time),
+                title: Text('Add TimeTable'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTimeTable()));
                 }
             ),
           ],

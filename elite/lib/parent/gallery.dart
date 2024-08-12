@@ -15,8 +15,9 @@ class _GalleryState extends State<Gallery> {
   void initState() {
     super.initState();
     controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
-        Uri.parse('https://www.instagram.com/research_sakec?igsh=NTc4MTIwNjQ2YQ%3D%3D'),
+        Uri.parse("https://www.instagram.com/research_sakec?igsh=NTc4MTIwNjQ2YQ=="),
       );
   }
 

@@ -86,6 +86,8 @@ class _BirthdayState extends State<Birthday> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Birthday Reminder'),
       ),
       body: Column(

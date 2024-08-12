@@ -1,29 +1,27 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elite/admin/Homepage.dart';
 import 'package:elite/login_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
-import 'admin/Studentform.dart';
 import 'auth_tokens/tokens.dart';
 import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
       apiKey: 'AIzaSyDyGS3AJmHhbYBvzPm1hGMPST4WHkzmku8',
       appId: '1:559329487158:android:5fab07ca02ce81de156b97',
       messagingSenderId: '559329487158',
       projectId: 'elitenew-f0b99',
       storageBucket: 'gs://elitenew-f0b99.appspot.com',
-
     ),
   );
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   NotificationSettings settings = await messaging.requestPermission(
@@ -36,26 +34,21 @@ void main() async {
     sound: true,
   );
 
-  print('User granted permission: ${settings.authorizationStatus}');
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: true,
-  );
-
+  Workmanager().initialize(callbackDispatcher);
   Workmanager().registerPeriodicTask(
-    "1",
+    "uniqueTaskName",
     "simplePeriodicTask",
-    frequency: Duration(hours: 24),
+    frequency: const Duration(hours: 24),
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Firebase.initializeApp();
+    print("Executing task: $task");
     await checkBirthdaysAndSendNotifications();
     return Future.value(true);
   });
@@ -63,20 +56,20 @@ void callbackDispatcher() {
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin
-  _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   static void initialize() {
-    final InitializationSettings initializationSettings =
-    InitializationSettings(
-        android: AndroidInitializationSettings("@mipmap/ic_launcher"));
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: AndroidInitializationSettings("@mipmap/ic_launcher"));
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   static void display(RemoteMessage message) async {
     try {
-      print("In Notification method");
-      Random random = new Random();
+      Random random = Random();
       int id = random.nextInt(1000);
-      final NotificationDetails notificationDetails = NotificationDetails(
+      const NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
           "mychannel",
           "my channel",
@@ -86,15 +79,15 @@ class LocalNotificationService {
           icon: '@mipmap/ic_launcher',
         ),
       );
-      print("my id is ${id.toString()}");
+
       await _flutterLocalNotificationsPlugin.show(
         id,
-        message.notification!.title,
-        message.notification!.title,
+        message.notification?.title ?? 'Default Title',
+        message.notification?.body ?? 'Default Body',
         notificationDetails,
       );
-    } on Exception catch (e) {
-      print('Error>>>$e');
+    } catch (e) {
+      print("Error displaying notification: $e");
     }
   }
 }
@@ -107,29 +100,35 @@ Future<void> backgroundHandler(RemoteMessage msg) async {
 Future<void> checkBirthdaysAndSendNotifications() async {
   final DateTime now = DateTime.now();
   final String today = "${now.day}-${now.month}";
+  print(today);
   final firestore = FirebaseFirestore.instance;
 
   try {
     QuerySnapshot snapshot = await firestore.collection('students').get();
+    print("Number of students fetched: ${snapshot.docs.length}");
+
     for (var doc in snapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data.containsKey('dob')) {
-        DateTime dob = (data['dob'] as Timestamp).toDate();
-        String dobString = "${dob.day}-${dob.month}";
-        if (dobString == today) {
-          String name = data['name'];
+        String dobString = data['dob'];
+        List<String> dobParts = dobString.split('-');
+        String dobDayMonth = "${dobParts[0]}-${dobParts[1]}";
+        if (dobDayMonth == today) {
+          String name = data['student_name'];
+          print("Sending birthday notification for $name");
           await sendTopicMessage(name);
         }
       }
     }
   } catch (e) {
-    print(e);
+    print("Error checking birthdays: $e");
   }
 }
 
 Future<void> sendTopicMessage(String name) async {
   final String accessToken = await getAccessToken();
-  const url = 'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
+  const url =
+      'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
   final headers = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $accessToken',
@@ -139,13 +138,14 @@ Future<void> sendTopicMessage(String name) async {
     'message': {
       'topic': 'birthdays',
       'notification': {
-        'body': "Today is ${name}'s birthday",
-        'title': 'Happy Birthday'
+        'title': 'Happy Birthday',
+        'body': "Today is $name's birthday",
       }
     }
   });
 
-  final response = await http.post(Uri.parse(url), headers: headers, body: body);
+  final response =
+      await http.post(Uri.parse(url), headers: headers, body: body);
 
   if (response.statusCode == 200) {
     print('Message sent successfully');
@@ -175,18 +175,17 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     LocalNotificationService.initialize();
     FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null) {
-        // Handle the initial message here
-      }
+      if (message != null) {}
     });
+
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
         LocalNotificationService.display(message);
       }
     });
+
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print("on message opened app");
-      // Handle message when the app is opened from a notification
     });
   }
 
@@ -198,7 +197,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }
