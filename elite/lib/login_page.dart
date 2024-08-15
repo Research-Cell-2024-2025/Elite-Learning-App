@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:elite/admin/Homepage.dart';
+import 'package:elite/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,29 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _showPassword = false;
+  bool _isLoading = false;
+  bool _rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserLoggedIn();
+  }
+
+  void _checkUserLoggedIn() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      routeUser();
+    }
+  }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
   void routeUser() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
@@ -42,14 +58,15 @@ class _LoginPageState extends State<LoginPage> {
             .collection('students')
             .doc(user.uid)
             .get();
-        print(user.uid);
-       print(documentSnapshot.data());
 
         if (documentSnapshot.exists) {
-          Map<String,dynamic> data = documentSnapshot.data() as Map<String,dynamic>;
-          if(!data.containsKey('token')){
-            FirebaseFirestore.instance.collection('students').doc(user.uid).set(
-                {'token': token},SetOptions(merge: true));
+          Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+          if (!data.containsKey('token')) {
+            FirebaseFirestore.instance
+                .collection('students')
+                .doc(user.uid)
+                .set({'token': token}, SetOptions(merge: true));
           }
           if (documentSnapshot.get('role') == "admin") {
             Navigator.pushReplacement(
@@ -63,47 +80,95 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
         } else {
-          print('Document does not exist in the database.');
+          _showErrorSnackBar('Document does not exist in the database.');
         }
       } catch (e) {
-        print('Error fetching document: $e');
+        _showErrorSnackBar('Error fetching document: $e');
       }
     } else {
-      print('No user is currently signed in.');
+      _showErrorSnackBar('No user is currently signed in.');
     }
   }
 
-
-
-
-
-  Future<void> loginUser(String email, String password) async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    messaging.subscribeToTopic('birthdays');
+  Future<void> _resetPassword() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-          email: email,
-          password: password
+      final _auth = FirebaseAuth.instance;
+      await _auth.sendPasswordResetEmail(email: _emailController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password reset link has been sent to your email.'),
+        ),
       );
-      routeUser();
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'auth/invalid-email') {
-        print( 'Invalid email address.');
-      } else if (e.code == 'auth/user-not-found') {
-        print( 'User not found.');
-      } else if (e.code == 'auth/wrong-password') {
-        print( 'Wrong password.');
-      } else if (e.code == 'auth/too-many-requests') {
-        print( 'Too many login attempts. Please try again later.');
+      String message;
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
       } else {
-        print( 'An error occurred: ${e.message}');
+        message = 'Enter email';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    }
+  }
+  Future<void> loginUser(String email, String password) async {
+    if (_validateInputs(email, password)) {
+
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+      messaging.subscribeToTopic('birthdays');
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+
+        if (_rememberMe) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('email', email);
+          await prefs.setString('password', password);
+        }
+
+        routeUser();
+      } on FirebaseAuthException catch (e) {
+        _showErrorSnackBar('Invalid email or password');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
 
-  @override
+  bool _validateInputs(String email, String password) {
+    if (email.isEmpty) {
+      _showErrorSnackBar('Email cannot be empty.');
+      return false;
+    }
+
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      _showErrorSnackBar('Invalid email format.');
+      return false;
+    }
+
+    if (password.isEmpty) {
+      _showErrorSnackBar('Password cannot be empty.');
+      return false;
+    }
+
+    return true;
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -129,30 +194,31 @@ class _LoginPageState extends State<LoginPage> {
                 border: 0,
                 blur: 4,
                 linearGradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.purple.withOpacity(0.1),
-                      Colors.purple.withOpacity(0.05),
-                    ],
-                    stops: [
-                      0.1,
-                      1,
-                    ]),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.purple.withOpacity(0.1),
+                    Colors.purple.withOpacity(0.05),
+                  ],
+                  stops: [
+                    0.1,
+                    1,
+                  ],
+                ),
                 borderGradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.deepPurple.withOpacity(0.8), // Darker purple on the edges
-                    Colors.deepPurple.withOpacity(0.8), // Darker purple on the edges
-                    Colors.purple.withOpacity(0.3), // Light purple in the middle
-                    Colors.purple.withOpacity(0.3), // Light purple in the middle
+                    Colors.deepPurple.withOpacity(0.8),
+                    Colors.deepPurple.withOpacity(0.8),
+                    Colors.purple.withOpacity(0.3),
+                    Colors.purple.withOpacity(0.3),
                   ],
                   stops: [
-                    0.0, // Start of the edge
-                    0.1, // Edge
-                    0.9, // Middle
-                    1.0, // End of the edge
+                    0.0,
+                    0.1,
+                    0.9,
+                    1.0,
                   ],
                 ),
                 child: Container(
@@ -257,8 +323,8 @@ class _LoginPageState extends State<LoginPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple.shade400,
                         ),
-                        onPressed: () =>
-                            loginUser(_emailController.text,_passwordController.text), // Set the button's color to transparent to show the container color
+                        onPressed: () => loginUser(
+                            _emailController.text, _passwordController.text),
                         child: Text(
                           'LOGIN',
                           style: TextStyle(
@@ -266,7 +332,11 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.white,
                           ),
                         ),
-                      )
+                      ),
+                      // GestureDetector(
+                      //   onTap: _resetPassword,
+                      //   child: Text("forgot password?"),
+                      // )
                     ],
                   ),
                 ),

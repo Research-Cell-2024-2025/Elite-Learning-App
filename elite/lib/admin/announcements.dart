@@ -56,6 +56,8 @@ class _announcementsState extends State<announcements> {
   Widget build(BuildContext context) {
     return (Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Add Announcements'),
       ),
       body: Container(

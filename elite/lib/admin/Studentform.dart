@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // Add this import
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 
 class StudentFormScreen extends StatefulWidget {
   @override
@@ -36,8 +37,9 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
   final _relative1nameController = TextEditingController();
   final _relative2nameController = TextEditingController();
   final _relative3nameController = TextEditingController();
+  final _enrollmentCodeController = TextEditingController();
 
-
+  static const String _enrollmentCodeKey = "enrollmentCode";
   String _selectedGender = 'Male';
   String _selectedStandard = 'Jr.KG';
   String _selectedNationality = 'Indian';
@@ -68,9 +70,41 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
     _relative1nameController.dispose();
     _relative2nameController.dispose();
     _relative3nameController.dispose();
+    _enrollmentCodeController.dispose();
     super.dispose();
   }
+  @override
+  void initState() {
+    super.initState();
+    _loadEnrollmentCode();
+  }
 
+  Future<void> _loadEnrollmentCode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedCode = prefs.getString(_enrollmentCodeKey);
+
+    if (savedCode != null) {
+      _enrollmentCodeController.text = savedCode;
+    } else {
+      _enrollmentCodeController.text = "EL2425001";
+    }
+  }
+
+  Future<void> _incrementEnrollmentCode() async {
+    setState(() {
+      String currentCode = _enrollmentCodeController.text;
+      String prefix = currentCode.substring(0, 7);
+      int numericPart = int.parse(currentCode.substring(7));
+
+      numericPart++;
+
+      String newCode = '$prefix${numericPart.toString().padLeft(3, '0')}';
+      _enrollmentCodeController.text = newCode;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_enrollmentCodeKey, _enrollmentCodeController.text);
+  }
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -96,6 +130,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
 
       if (user != null) {
         final studentData = {
+          'enrollment_code': _enrollmentCodeController.text,
           'student_name': _studentNameController.text,
           'father_name': _fatherNameController.text,
           'mother_name': _motherNameController.text,
@@ -139,6 +174,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
         SnackBar(content: Text('Failed to save student information: $error')),
       );
     }
+    _incrementEnrollmentCode();
   }
 
   void _submitForm() {
@@ -151,6 +187,8 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Personal Information Form'),
       ),
       body: Padding(
@@ -160,6 +198,17 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                TextFormField(
+
+                  controller: _enrollmentCodeController,
+                  decoration: InputDecoration(labelText: 'Enrollment Code'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter unique enrollment code';
+                    }
+                    return null;
+                  },
+                ),
                 TextFormField(
                   controller: _studentNameController,
                   decoration: InputDecoration(labelText: 'Student Name'),

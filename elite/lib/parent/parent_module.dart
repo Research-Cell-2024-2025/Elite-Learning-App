@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:elite/parent/announcements.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:elite/parent/attendance.dart';
@@ -20,8 +21,8 @@ class ParentModule extends StatefulWidget {
 class _ParentModuleState extends State<ParentModule> {
   final List<ModuleItem> moduleItems = [
     ModuleItem(
-      title: 'Announcements',
-      icon: Icons.add_alert,
+      title: 'Notices',
+      icon: Icons.notification_add,
       color: Colors.purple,
       route: parentAnnouncements(),
     ),
@@ -34,20 +35,20 @@ class _ParentModuleState extends State<ParentModule> {
     ModuleItem(
       title: 'Birthday',
       icon: Icons.cake,
-      color: Color(0xFFAED4E6),
+      color: Colors.purple,
       route: Birthday(),
     ),
     ModuleItem(
       title: 'Time Table',
       icon: Icons.schedule,
-      color: Colors.lightGreenAccent,
+      color: Colors.purple,
       route: TimeTable(),
     ),
     ModuleItem(
       title: 'About Us',
       icon: Icons.info,
       color: Colors.purple,
-      route: Container(),
+      route: ContactUs(),
     ),
     ModuleItem(
       title: 'Events',
@@ -58,20 +59,8 @@ class _ParentModuleState extends State<ParentModule> {
     ModuleItem(
       title: 'Fee Records',
       icon: Icons.payment,
-      color: Colors.lightBlueAccent,
-      route: FeePayment(),
-    ),
-    ModuleItem(
-      title: 'Attendance',
-      icon: Icons.check_circle,
-      color: Colors.greenAccent,
-      route: AttendanceScreen(),
-    ),
-    ModuleItem(
-      title: 'Contact Us',
-      icon: Icons.phone,
-      color: Colors.orangeAccent,
-      route: ContactUs(),
+      color: Colors.purple,
+      route: FeeRecordsPage(),
     ),
   ];
 
@@ -126,6 +115,14 @@ class _ParentModuleState extends State<ParentModule> {
     });
   }
 
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,12 +139,7 @@ class _ParentModuleState extends State<ParentModule> {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
+            onPressed: signOut,
           ),
         ],
       ),
@@ -178,7 +170,7 @@ class _ParentModuleState extends State<ParentModule> {
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 4, // 40% of the screen height
             child: PageView.builder(
               controller: _pageController,
               itemCount: imagePaths.length,
@@ -189,7 +181,7 @@ class _ParentModuleState extends State<ParentModule> {
               },
               itemBuilder: (context, index) {
                 return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -217,7 +209,7 @@ class _ParentModuleState extends State<ParentModule> {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 6, // 60% of the screen height
             child: Container(
               alignment: Alignment.center,
               margin: EdgeInsets.all(20),
@@ -293,7 +285,7 @@ class _ParentModuleState extends State<ParentModule> {
                                   module.title,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 14.0,
+                                    fontSize: 12.0,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey[800],
                                   ),
@@ -305,64 +297,64 @@ class _ParentModuleState extends State<ParentModule> {
                       ).toList(),
                     ),
                   ),
-                  // Container(
-                  //   margin: EdgeInsets.all(10),
-                  //   padding: EdgeInsets.all(8),
-                  //   decoration: BoxDecoration(
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.grey.withOpacity(0.5),
-                  //         spreadRadius: 2,
-                  //         blurRadius: 5,
-                  //         offset: Offset(0, 3),
-                  //       ),
-                  //     ],
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(8.0),
-                  //     border: Border.all(
-                  //       color: Colors.white,
-                  //       width: 1.0,
-                  //     ),
-                  //   ),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(builder: (context) => moduleItems.last.route),
-                  //       );
-                  //     },
-                  //     child: Column(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: [
-                  //         Container(
-                  //           alignment: Alignment.center,
-                  //           decoration: BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             color: moduleItems.last.color,
-                  //           ),
-                  //           child: Padding(
-                  //             padding: const EdgeInsets.all(8.0),
-                  //             child: Icon(
-                  //               moduleItems.last.icon,
-                  //               size: 30.0,
-                  //               color: Colors.white,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         SizedBox(height: 5.0),
-                  //         Text(
-                  //           moduleItems.last.title,
-                  //           textAlign: TextAlign.center,
-                  //           style: TextStyle(
-                  //             fontSize: 14.0,
-                  //             fontWeight: FontWeight.bold,
-                  //             color: Colors.grey[800],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => moduleItems.last.route),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: moduleItems.last.color,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                moduleItems.last.icon,
+                                size: 30.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            moduleItems.last.title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

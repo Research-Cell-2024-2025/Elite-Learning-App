@@ -22,6 +22,8 @@ class AttendanceScreen extends StatelessWidget {
     int total = 14;
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title:Text('Attendance',
         style: TextStyle(
           color: Colors.purple,

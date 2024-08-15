@@ -25,6 +25,8 @@ class _AdminAddParentState extends State<AdminAddParent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text(
           "Admin",
           style: TextStyle(color: Colors.white),

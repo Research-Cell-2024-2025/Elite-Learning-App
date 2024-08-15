@@ -7,6 +7,7 @@ import '../login_page.dart';
 import 'Studentform.dart';
 import 'display.dart';
 import 'package:elite/admin/Studentform.dart';
+import 'package:elite/admin/addFeespage.dart';
 
 class HomePage extends StatelessWidget {
   final bool isAdmin;
@@ -17,6 +18,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Home'),
         actions: [
           IconButton(
@@ -76,21 +79,28 @@ class HomePage extends StatelessWidget {
               }
             ),
              ListTile(
-              leading: Icon(Icons.event),
+              leading: Icon(Icons.add),
               title: Text('Add Event'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddEvents()));
               }
             ),
             ListTile(
-                leading: Icon(Icons.image),
+                leading: Icon(Icons.add),
                 title: Text('Add Images'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Images()));
                 }
             ),
             ListTile(
-                leading: Icon(Icons.access_time),
+                leading: Icon(Icons.add),
+                title: Text('Add a Student Fee'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddFeesPage()));
+                }
+            ),
+            ListTile(
+                leading: Icon(Icons.add),
                 title: Text('Add TimeTable'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTimeTable()));

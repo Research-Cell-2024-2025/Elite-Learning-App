@@ -12,6 +12,8 @@ class StudentListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Student List'),
       ),
       body: StreamBuilder<QuerySnapshot>(

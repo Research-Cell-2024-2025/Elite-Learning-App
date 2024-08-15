@@ -21,9 +21,7 @@ void main() async {
       storageBucket: 'gs://elitenew-f0b99.appspot.com',
     ),
   );
-
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
@@ -33,21 +31,19 @@ void main() async {
     provisional: false,
     sound: true,
   );
-
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-
   Workmanager().initialize(callbackDispatcher);
   Workmanager().registerPeriodicTask(
     "uniqueTaskName",
     "simplePeriodicTask",
     frequency: const Duration(hours: 24),
   );
-
   runApp(const MyApp());
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+
     print("Executing task: $task");
     await checkBirthdaysAndSendNotifications();
     return Future.value(true);
@@ -99,21 +95,21 @@ Future<void> backgroundHandler(RemoteMessage msg) async {
 
 Future<void> checkBirthdaysAndSendNotifications() async {
   final DateTime now = DateTime.now();
-  final String today = "${now.day}-${now.month}";
-  print(today);
+  final String today = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}";  print("now " + today);
   final firestore = FirebaseFirestore.instance;
 
   try {
     QuerySnapshot snapshot = await firestore.collection('students').get();
-    print("Number of students fetched: ${snapshot.docs.length}");
-
     for (var doc in snapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data.containsKey('dob')) {
         String dobString = data['dob'];
         List<String> dobParts = dobString.split('-');
         String dobDayMonth = "${dobParts[0]}-${dobParts[1]}";
+        print("hello " + dobDayMonth);
         if (dobDayMonth == today) {
+          print(dobDayMonth);
+          print(today);
           String name = data['student_name'];
           print("Sending birthday notification for $name");
           await sendTopicMessage(name);

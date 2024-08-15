@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +32,13 @@ class _ImagesState extends State<Images> {
   }
 
   Future<void> filepicker() async {
+    if (images.length >= 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Maximum image limit reached.')),
+      );
+      return;
+    }
+
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
     try {
       if (pickedFile != null) {
@@ -47,13 +53,25 @@ class _ImagesState extends State<Images> {
           'name': filename,
           'url': downloadLink, // Store the download URL, not the file
         });
-        // Update the images list
         setState(() {
           images.add({'name': filename, 'url': downloadLink});
         });
       }
     } catch (e) {
       print("Error Uploading Images: $e ");
+    }
+  }
+
+  Future<void> deleteImage(String docId, String imageUrl) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await firestore.collection('Images').doc(docId).delete();
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+      setState(() {
+        images.removeWhere((image) => image['url'] == imageUrl);
+      });
+    } catch (e) {
+      print("Error Deleting Image: $e");
     }
   }
 
@@ -87,10 +105,41 @@ class _ImagesState extends State<Images> {
                   child: Column(
                     children: [
                       Expanded(
-                      child: Image.network(images[index]['url']),
+                        child: Image.network(images[index]['url']),
                       ),
                       SizedBox(height: 10),
                       Text(images[index]['name']),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () async {
+                          bool? confirm = await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('Delete Image'),
+                              content: Text('Are you sure you want to delete this image?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirm == true) {
+                            String docId = (await FirebaseFirestore.instance
+                                .collection('Images')
+                                .where('url', isEqualTo: images[index]['url'])
+                                .get())
+                                .docs.first.id;
+                            deleteImage(docId, images[index]['url']);
+                          }
+                        },
+                      ),
                     ],
                   ),
                 );

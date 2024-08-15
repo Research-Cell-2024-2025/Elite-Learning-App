@@ -37,6 +37,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
   final _relative1nameController = TextEditingController();
   final _relative2nameController = TextEditingController();
   final _relative3nameController = TextEditingController();
+  final _enrollmentCodeController = TextEditingController();
 
   String _selectedGender = 'Male';
   String _selectedStandard = 'Jr.KG';
@@ -53,6 +54,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
     final studentData = studentDoc.data() as Map<String, dynamic>;
 
     setState(() {
+      _enrollmentCodeController.text = studentData['enrollment_code'] ?? '';
       _studentNameController.text = studentData['student_name'] ?? '';
       _fatherNameController.text = studentData['father_name'] ?? '';
       _motherNameController.text = studentData['mother_name'] ?? '';
@@ -142,6 +144,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         title: Text('Edit Student Information'),
       ),
       body: Padding(
@@ -151,6 +155,17 @@ class _EditStudentPageState extends State<EditStudentPage> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                TextFormField(
+                  controller: _enrollmentCodeController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: 'Enrollment Code'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter Enrollment code';
+                    }
+                    return null;
+                  },
+                ),
                 TextFormField(
                   controller: _studentNameController,
                   decoration: InputDecoration(labelText: 'Student Name'),
