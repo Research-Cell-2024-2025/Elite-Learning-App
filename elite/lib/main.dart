@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elite/login_page.dart';
+import 'package:elite/startpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,11 +33,15 @@ void main() async {
     provisional: false,
     sound: true,
   );
-  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  DateTime now = DateTime.now();
+  DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1);
+  Duration timeUntilMidnight = nextMidnight.difference(now);
+
   Workmanager().initialize(callbackDispatcher);
   Workmanager().registerPeriodicTask(
     "uniqueTaskName",
     "simplePeriodicTask",
+    initialDelay: timeUntilMidnight,
     frequency: const Duration(hours: 24),
   );
   runApp(const MyApp());
@@ -57,7 +63,7 @@ class LocalNotificationService {
   static void initialize() {
     const InitializationSettings initializationSettings =
         InitializationSettings(
-            android: AndroidInitializationSettings("@mipmap/ic_launcher"));
+            android: AndroidInitializationSettings("@mipmap/elitelogo"));
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -71,8 +77,7 @@ class LocalNotificationService {
           "my channel",
           importance: Importance.max,
           priority: Priority.high,
-          largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/elitelogo',
         ),
       );
 
@@ -122,6 +127,13 @@ Future<void> checkBirthdaysAndSendNotifications() async {
 }
 
 Future<void> sendTopicMessage(String name) async {
+   await FirebaseFirestore.instance.collection('birthday').doc().set({
+    'name': name,
+    'message': "Today is $name's birthday",
+    'title': 'Happy Birthday',
+    'timestamp': FieldValue.serverTimestamp(),
+  });
+  
   final String accessToken = await getAccessToken();
   const url =
       'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
@@ -150,12 +162,7 @@ Future<void> sendTopicMessage(String name) async {
     print('Response body: ${response.body}');
   }
 
-  await FirebaseFirestore.instance.collection('birthday').doc().set({
-    'name': name,
-    'message': "Today is $name's birthday",
-    'title': 'Happy Birthday',
-    'timestamp': FieldValue.serverTimestamp(),
-  });
+ 
 }
 
 class MyApp extends StatefulWidget {
@@ -193,7 +200,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: const LoginPage(),
+      home: const StartPage(),
     );
   }
 }

@@ -2,6 +2,9 @@ import 'package:elite/admin/addEvent.dart';
 import 'package:elite/admin/addTimetable.dart';
 import 'package:elite/admin/announcements.dart';
 import 'package:elite/admin/carouselimg.dart';
+import 'package:elite/admin/createTeacher.dart';
+import 'package:elite/startpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../login_page.dart';
 import 'Studentform.dart';
@@ -9,11 +12,26 @@ import 'display.dart';
 import 'package:elite/admin/Studentform.dart';
 import 'package:elite/admin/addFeespage.dart';
 
-class HomePage extends StatelessWidget {
-  final bool isAdmin;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  HomePage({required this.isAdmin});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+
+
+  late final bool isAdmin;
+
+
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => StartPage()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +42,7 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
+            onPressed: signOut,
           ),
         ],
       ),
@@ -66,7 +79,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StudentListPage(isAdmin: isAdmin),
+                    builder: (context) => StudentListPage(),
                   ),
                 );
               },
@@ -104,6 +117,13 @@ class HomePage extends StatelessWidget {
                 title: Text('Add TimeTable'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTimeTable()));
+                }
+            ),
+                        ListTile(
+                leading: Icon(Icons.add),
+                title: Text('Add Teacher'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Createteacher()));
                 }
             ),
           ],

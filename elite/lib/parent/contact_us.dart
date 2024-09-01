@@ -6,10 +6,10 @@ class ContactUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD8E0FF),
+      backgroundColor: Color(0xFFFBEEFF),
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: Text('Contact Us'),
+        title: Text('About Us'),
         backgroundColor: Colors.purple,
       ),
       body: Padding(
@@ -34,134 +34,134 @@ class ContactUs extends StatelessWidget {
                 border: Border.all(color: Colors.white),
               ),
               child: Text(
-                'Welcome to the Contact Us section of the app. If you have any questions or need assistance, please feel free to reach out to us using the contact information provided below.',
+                'Welcome to the About Us section of the app.',
                 style: TextStyle(fontSize: 16.0),
               ),
             ),
             SizedBox(height: 20.0),
-            Container(
-              margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
-              padding: EdgeInsets.all(10),
-
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.white),
-              ),
-              child: Text(
-                'School Office Contact:',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFF60951), // Light Pink
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
+            //   padding: EdgeInsets.all(10),
+            //
+            //   decoration: BoxDecoration(
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.grey.withOpacity(0.5),
+            //         spreadRadius: 2,
+            //         blurRadius: 5,
+            //         offset: Offset(0, 1), // changes position of shadow
+            //       ),
+            //     ],
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: Colors.white),
+            //   ),
+            //   child: Text(
+            //     'School Office Contact:',
+            //     style: TextStyle(
+            //       fontSize: 18.0,
+            //       fontWeight: FontWeight.bold,
+            //       color: Color(0xFFF60951), // Light Pink
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: 10.0),
-            Container(
-              margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
-                color: Color(0xFFEEF0FF),
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.white),
-              ),
-              child: Column(
-                children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
-
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.phone,
-                    color: Color(0xFFFA2D6F), // Light Pink
-                  ),
-                  title: Text('Landline'),
-                  subtitle: Text('022 28671599'),
-                  onTap: () => launch('tel:022 28671599'),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.email,
-                    color: Color(0xFFA2FFC4), // Mint Green
-                  ),
-                  title: Text('Email'),
-                  subtitle: Text('elitelearning@gmail.com'),
-                  onTap: () => launch('elitelearning@gmail.com'),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.person,
-                    color: Color(0xFFB8DFFD), // Baby Blue
-                  ),
-                  title: Text('Contact'),
-                  subtitle: Text('Elite learning'),
-                ),
-              ),
-              ]),
-            ),
-            SizedBox(height: 10.0),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
+            //   padding: EdgeInsets.all(8),
+            //   decoration: BoxDecoration(
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.grey.withOpacity(0.5),
+            //         spreadRadius: 2,
+            //         blurRadius: 5,
+            //         offset: Offset(0, 1), // changes position of shadow
+            //       ),
+            //     ],
+            //     color: Color(0xFFEEF0FF),
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: Colors.white),
+            //   ),
+            //   // child: Column(
+            //   //   children: [
+            //   // Container(
+            //   //   margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+            //   //
+            //   //   padding: EdgeInsets.all(5),
+            //   //   decoration: BoxDecoration(
+            //   //     boxShadow: [
+            //   //       BoxShadow(
+            //   //         color: Colors.grey.withOpacity(0.5),
+            //   //         spreadRadius: 2,
+            //   //         blurRadius: 5,
+            //   //         offset: Offset(0, 1), // changes position of shadow
+            //   //       ),
+            //   //     ],
+            //   //     color: Colors.white,
+            //   //     borderRadius: BorderRadius.circular(5),
+            //   //   ),
+            //   //   child: ListTile(
+            //   //     leading: Icon(
+            //   //       Icons.phone,
+            //   //       color: Color(0xFFFA2D6F), // Light Pink
+            //   //     ),
+            //   //     title: Text('Landline'),
+            //   //     subtitle: Text(''),
+            //   //     onTap: () => launch('tel:022 28671599'),
+            //   //   ),
+            //   // ),
+            //   // Container(
+            //   //   margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+            //   //   padding: EdgeInsets.all(5),
+            //   //   decoration: BoxDecoration(
+            //   //     boxShadow: [
+            //   //       BoxShadow(
+            //   //         color: Colors.grey.withOpacity(0.5),
+            //   //         spreadRadius: 2,
+            //   //         blurRadius: 5,
+            //   //         offset: Offset(0, 1), // changes position of shadow
+            //   //       ),
+            //   //     ],
+            //   //     color: Colors.white,
+            //   //     borderRadius: BorderRadius.circular(5),
+            //   //   ),
+            //   //   child: ListTile(
+            //   //     leading: Icon(
+            //   //       Icons.email,
+            //   //       color: Color(0xFFA2FFC4), // Mint Green
+            //   //     ),
+            //   //     title: Text('Email'),
+            //   //     subtitle: Text('elitelearning@gmail.com'),
+            //   //     onTap: () => launch('elitelearning@gmail.com'),
+            //   //   ),
+            //   // ),
+            //   // // Container(
+            //   // //   padding: EdgeInsets.all(5),
+            //   // //   decoration: BoxDecoration(
+            //   // //     boxShadow: [
+            //   // //       BoxShadow(
+            //   // //         color: Colors.grey.withOpacity(0.5),
+            //   // //         spreadRadius: 2,
+            //   // //         blurRadius: 5,
+            //   // //         offset: Offset(0, 1), // changes position of shadow
+            //   // //       ),
+            //   // //     ],
+            //   // //
+            //   // //     color: Colors.white,
+            //   // //     borderRadius: BorderRadius.circular(5),
+            //   // //   ),
+            //   // //   // child: ListTile(
+            //   // //   //   leading: Icon(
+            //   // //   //     Icons.person,
+            //   // //   //     color: Color(0xFFB8DFFD), // Baby Blue
+            //   // //   //   ),
+            //   // //   //   title: Text('Contact'),
+            //   // //   //   subtitle: Text('Elite learning'),
+            //   // //   // ),
+            //   // // ),
+            //   // ]),
+            // ),
+            // SizedBox(height: 10.0),
             // Container(
             //   margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
             //   padding: EdgeInsets.all(10),
@@ -323,29 +323,7 @@ class ContactUs extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center, // Center the items horizontally
-            children: [
-              // ... your existing bottom navigation items ...
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Privacy()), // Navigate to PrivacyPage
-                  );
-                },
-                child: Text(
-                  'Privacy & Security',
-                  style: TextStyle(color: Colors.pinkAccent),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+
     );
   }
 }

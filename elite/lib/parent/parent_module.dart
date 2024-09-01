@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:elite/parent/announcements.dart';
+import 'package:elite/startpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -20,47 +21,69 @@ class ParentModule extends StatefulWidget {
 
 class _ParentModuleState extends State<ParentModule> {
   final List<ModuleItem> moduleItems = [
-    ModuleItem(
-      title: 'Notices',
-      icon: Icons.notification_add,
-      color: Colors.purple,
-      route: parentAnnouncements(),
-    ),
-    ModuleItem(
-      title: 'Gallery',
-      icon: Icons.photo_album,
-      color: Colors.purple,
-      route: Gallery(),
-    ),
+    //1
     ModuleItem(
       title: 'Birthday',
       icon: Icons.cake,
       color: Colors.purple,
       route: Birthday(),
     ),
+    //2
+    ModuleItem(
+      title: 'Attendance',
+      icon: Icons.people,
+      color: Colors.purple,
+      route: AttendanceScreen(),
+    ),
+    //3
+    ModuleItem(
+      title: 'Announcements',
+      icon: Icons.notification_add,
+      color: Colors.purple,
+      route: parentAnnouncements(),
+    ),
+    //4
     ModuleItem(
       title: 'Time Table',
       icon: Icons.schedule,
       color: Colors.purple,
       route: TimeTable(),
     ),
-    ModuleItem(
-      title: 'About Us',
-      icon: Icons.info,
-      color: Colors.purple,
-      route: ContactUs(),
-    ),
+    //5
     ModuleItem(
       title: 'Events',
       icon: Icons.event,
       color: Colors.purple,
       route: Events(),
     ),
+    //6
     ModuleItem(
       title: 'Fee Records',
       icon: Icons.payment,
       color: Colors.purple,
       route: FeeRecordsPage(),
+    ),
+    //7
+    ModuleItem(
+      title: 'Diary',
+      icon: Icons.menu_book_rounded,
+      color: Colors.purple,
+      route: Container(),
+    ),
+    //8
+    ModuleItem(
+      title: 'Gallery',
+      icon: Icons.photo_album,
+      color: Colors.purple,
+      route: Gallery(),
+    ),
+
+    //9
+    ModuleItem(
+      title: 'About Us',
+      icon: Icons.info,
+      color: Colors.purple,
+      route: ContactUs(),
     ),
   ];
 
@@ -119,7 +142,7 @@ class _ParentModuleState extends State<ParentModule> {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => StartPage()),
     );
   }
 
@@ -146,12 +169,12 @@ class _ParentModuleState extends State<ParentModule> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.purple,
         child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CopyrightPage()),
-            );
-          },
+          // onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => CopyrightPage()),
+          //   );
+          // },
           child: Container(
             height: 60.0,
             child: Center(
@@ -234,9 +257,9 @@ class _ParentModuleState extends State<ParentModule> {
                 children: [
                   Expanded(
                     child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
+                     // physics: NeverScrollableScrollPhysics(),
                       crossAxisCount: 3,
-                      children: moduleItems.sublist(0, moduleItems.length - 1).map(
+                      children: moduleItems.sublist(0, moduleItems.length).map(
                             (module) => GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -297,64 +320,67 @@ class _ParentModuleState extends State<ParentModule> {
                       ).toList(),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => moduleItems.last.route),
-                        );
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: moduleItems.last.color,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                moduleItems.last.icon,
-                                size: 30.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            moduleItems.last.title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   margin: EdgeInsets.fromLTRB(10, 4, 10, 10),
+                  //   padding: EdgeInsets.symmetric(
+                  //     horizontal: MediaQuery.of(context).size.width * 0.05,
+                  //     vertical: MediaQuery.of(context).size.height * 0.02,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.withOpacity(0.5),
+                  //         spreadRadius: 2,
+                  //         blurRadius: 5,
+                  //         offset: Offset(0, 3),
+                  //       ),
+                  //     ],
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //     border: Border.all(
+                  //       color: Colors.white,
+                  //       width: 1.0,
+                  //     ),
+                  //   ),
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(builder: (context) => moduleItems.last.route),
+                  //       );
+                  //     },
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         Container(
+                  //           alignment: Alignment.center,
+                  //           decoration: BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             color: moduleItems.last.color,
+                  //           ),
+                  //           child: Padding(
+                  //             padding: const EdgeInsets.all(8.0),
+                  //             child: Icon(
+                  //               moduleItems.last.icon,
+                  //               size: 30.0,
+                  //               color: Colors.white,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         SizedBox(height: 5.0),
+                  //         Text(
+                  //           moduleItems.last.title,
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             fontSize: 12.0,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.grey[800],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

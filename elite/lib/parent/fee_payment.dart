@@ -43,7 +43,7 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
         title: Text('Fee Records'),
       ),
       body: _feeRecords.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: Text("No fee records yet"))
           : ListView.builder(
         itemCount: _feeRecords.length,
         itemBuilder: (context, index) {

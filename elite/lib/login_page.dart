@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:elite/admin/Homepage.dart';
 import 'package:elite/main.dart';
+import 'package:elite/teacher/markAttendance.dart';
+import 'package:elite/teacher/teacherDashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,9 @@ import 'package:elite/parent/parent_module.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final bool isTeacher;
+  
+  const   LoginPage({super.key, required this.isTeacher });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -37,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       routeUser();
     }
+
   }
 
   @override
@@ -47,48 +52,64 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void routeUser() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    String? token = await messaging.getToken();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  String? token = await messaging.getToken();
 
-    User? user = auth.currentUser;
+  User? user = auth.currentUser;
 
-    if (user != null) {
-      try {
-        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+  if (user != null) {
+    try {
+      DocumentSnapshot documentSnapshot;
+      if (widget.isTeacher == true) {
+        documentSnapshot = await FirebaseFirestore.instance
+            .collection('teacher')
+            .doc(user.uid)
+            .get();
+      } else {
+        documentSnapshot = await FirebaseFirestore.instance
             .collection('students')
             .doc(user.uid)
             .get();
-
-        if (documentSnapshot.exists) {
-          Map<String, dynamic> data =
-          documentSnapshot.data() as Map<String, dynamic>;
-          if (!data.containsKey('token')) {
-            FirebaseFirestore.instance
-                .collection('students')
-                .doc(user.uid)
-                .set({'token': token}, SetOptions(merge: true));
-          }
-          if (documentSnapshot.get('role') == "admin") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage(isAdmin: true)),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => ParentModule()),
-            );
-          }
-        } else {
-          _showErrorSnackBar('Document does not exist in the database.');
-        }
-      } catch (e) {
-        _showErrorSnackBar('Error fetching document: $e');
       }
-    } else {
-      _showErrorSnackBar('No user is currently signed in.');
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        
+        if (!data.containsKey('token')) {
+          FirebaseFirestore.instance
+              .collection(widget.isTeacher ? 'teacher' : 'students')
+              .doc(user.uid)
+              .set({'token': token}, SetOptions(merge: true));
+        }
+
+        if (documentSnapshot.get('role') == "admin") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+        else  if (documentSnapshot.get('role') == "teacher") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => dashboard()),
+          );
+        }
+         else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ParentModule()),
+          );
+        }
+      } else {
+        _showErrorSnackBar('Document does not exist in the database.');
+      }
+    } catch (e) {
+      _showErrorSnackBar('Error fetching document: $e');
     }
+  } else {
+    _showErrorSnackBar('No user is currently signed in.');
   }
+}
 
   Future<void> _resetPassword() async {
     try {

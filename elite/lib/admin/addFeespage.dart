@@ -180,7 +180,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Enrollment Code'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter father name';
+                      return 'Please enter unique enrollment code';
                     }
                     return null;
                   },
@@ -190,7 +190,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Student Id'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter father name';
+                      return 'Please enter student id';
                     }
                     return null;
                   },
@@ -285,7 +285,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Addmision No'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter address';
+                      return 'Please enter admission number';
                     }
                     return null;
                   },
@@ -296,7 +296,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Class/Section'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter email';
+                      return 'Please enter class';
                     }
                     return null;
                   },
@@ -348,10 +348,10 @@ class _AddFeesPageState extends State<AddFeesPage> {
                 TextFormField(
                   controller: _installmentNameController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Installment Name'),
+                  decoration: InputDecoration(labelText: 'Installment  Number'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter father phone number';
+                      return 'Please enter Installmennt number';
                     }
                     return null;
                   },
@@ -362,7 +362,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Fee Type'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter Fee Type';
                     }
                     return null;
                   },
@@ -373,7 +373,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Fee Total Amount'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter Total amount';
                     }
                     return null;
                   },
@@ -384,7 +384,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Fee Paid Ammount'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter paid amount';
                     }
                     return null;
                   },
@@ -395,7 +395,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Balance Amount'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter balance amount';
                     }
                     return null;
                   },
@@ -406,7 +406,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Late Fee',hintText: 'Set as 0 if none'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter this field';
                     }
                     return null;
                   },
@@ -417,7 +417,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   onTap: _selectDateForDueDate,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter date';
                     }
                     return null;
                   },
@@ -428,7 +428,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Date of Payment'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter date';
                     }
                     return null;
                   },
@@ -455,7 +455,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Payment Reciept No'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter mother phone number';
+                      return 'Please enter recipt number';
                     }
                     return null;
                   },

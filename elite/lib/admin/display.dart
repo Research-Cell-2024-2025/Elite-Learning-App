@@ -4,9 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'editpage.dart';
 
 class StudentListPage extends StatelessWidget {
-  final bool isAdmin;
 
-  StudentListPage({required this.isAdmin});
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class StudentListPage extends StatelessWidget {
               return ListTile(
                 title: Text(studentData['student_name'] ?? 'No name'),
                 subtitle: Text('Standard: ${studentData['standard'] ?? 'Unknown'}'),
-                trailing: isAdmin
+                trailing: true
                     ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
