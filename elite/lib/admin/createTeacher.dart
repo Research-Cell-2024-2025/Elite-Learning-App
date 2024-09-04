@@ -41,9 +41,9 @@ class _CreateteacherState extends State<Createteacher> {
          'role': "teacher",
          'uid': user.uid,
         };
-          await _firestore.doc(user.uid).set(teacherData);   
+          await _firestore.doc(user.email).set(teacherData);
           ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Student information saved successfully!')),
+          SnackBar(content: Text('Teacher created successfully!')),
         );
         _key.currentState!.reset();    
         }

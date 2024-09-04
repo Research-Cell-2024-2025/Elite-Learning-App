@@ -29,17 +29,21 @@ class _LoginPageState extends State<LoginPage> {
   bool _showPassword = false;
   bool _isLoading = false;
   bool _rememberMe = false;
+  bool _isLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
     _checkUserLoggedIn();
+    routeUser();
   }
 
   void _checkUserLoggedIn() async {
     User? user = auth.currentUser;
     if (user != null) {
-      routeUser();
+      setState(() {
+        _isLoggedIn = true;
+      });
     }
 
   }
@@ -52,112 +56,159 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void routeUser() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  String? token = await messaging.getToken();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? token = await messaging.getToken();
 
-  User? user = auth.currentUser;
+    User? user = auth.currentUser;
+    if (user != null) {
+      try {
+        DocumentSnapshot documentSnapshot;
+        String? userId = user.email;
 
-  if (user != null) {
-    try {
-      DocumentSnapshot documentSnapshot;
-      if (widget.isTeacher == true) {
-        documentSnapshot = await FirebaseFirestore.instance
-            .collection('teacher')
-            .doc(user.uid)
-            .get();
-      } else {
-        documentSnapshot = await FirebaseFirestore.instance
-            .collection('students')
-            .doc(user.uid)
-            .get();
+        if (widget.isTeacher) {
+          documentSnapshot = await FirebaseFirestore.instance
+              .collection('teacher')
+              .doc(userId)
+              .get();
+        } else {
+          documentSnapshot = await FirebaseFirestore.instance
+              .collection('students')
+              .doc(userId)
+              .get();
+        }
+
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+
+          // Update token if it's missing or different
+          if (data['token'] != token) {
+            await FirebaseFirestore.instance
+                .collection(widget.isTeacher ? 'teacher' : 'students')
+                .doc(userId)
+                .set({'token': token}, SetOptions(merge: true));
+          }
+
+          // Check if 'standard' field exists
+          if (data.containsKey('standard')) {
+            final standard = data['standard'];
+            await messaging.subscribeToTopic(standard);
+          } else {
+            _showErrorSnackBar('Standard field is missing.');
+          }
+
+          // Navigation based on 'role'
+          String role = data['role'];
+          if (role == "admin") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else if (role == "teacher") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => dashboard()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ParentModule()),
+            );
+          }
+        } else {
+          _showErrorSnackBar('Document does not exist in the database.');
+        }
+      } catch (e) {
+        _showErrorSnackBar('Error fetching document: ${e.toString()}');
       }
-
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-        
-        if (!data.containsKey('token')) {
-          FirebaseFirestore.instance
-              .collection(widget.isTeacher ? 'teacher' : 'students')
-              .doc(user.uid)
-              .set({'token': token}, SetOptions(merge: true));
-        }
-
-        if (documentSnapshot.get('role') == "admin") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        }
-        else  if (documentSnapshot.get('role') == "teacher") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => dashboard()),
-          );
-        }
-         else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ParentModule()),
-          );
-        }
-      } else {
-        _showErrorSnackBar('Document does not exist in the database.');
-      }
-    } catch (e) {
-      _showErrorSnackBar('Error fetching document: $e');
-    }
-  } else {
-    _showErrorSnackBar('No user is currently signed in.');
-  }
-}
-
-  Future<void> _resetPassword() async {
-    try {
-      final _auth = FirebaseAuth.instance;
-      await _auth.sendPasswordResetEmail(email: _emailController.text);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password reset link has been sent to your email.'),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      String message;
-      if (e.code == 'user-not-found') {
-        message = 'No user found for that email.';
-      } else {
-        message = 'Enter email';
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+    } else {
+      _showErrorSnackBar('No user is currently signed in.');
     }
   }
+
+  Future<void> _resetPassword(String email) async {
+    if (email.isEmpty) {
+      _showErrorSnackBar('Email cannot be empty.');
+    }
+
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      _showErrorSnackBar('Invalid email format.');
+    }
+      try {
+        final _auth = FirebaseAuth.instance;
+        await _auth.sendPasswordResetEmail(email: _emailController.text);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password reset link has been sent to your email.'),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'user-not-found') {
+          message = 'No user found for that email.';
+        } else {
+          message = 'Enter email';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
+      }
+
+
+  }
+
   Future<void> loginUser(String email, String password) async {
     if (_validateInputs(email, password)) {
-
-
       setState(() {
         _isLoading = true;
       });
 
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-
       messaging.subscribeToTopic('birthdays');
+
       try {
+        // Try signing in with email and password
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
-        if (_rememberMe) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('email', email);
-          await prefs.setString('password', password);
-        }
+        User? user = userCredential.user;
 
-        routeUser();
+        if (user != null) {
+          if (user.emailVerified) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('email', email);
+            await prefs.setString('password', password);
+
+            // Retrieve the teacher/student status here
+
+            routeUser();
+          } else {
+            await user.sendEmailVerification();
+            _showErrorSnackBar('Please verify your email. A verification link has been sent.');
+          }
+        }
       } on FirebaseAuthException catch (e) {
-        _showErrorSnackBar('Invalid email or password');
+        if (e.code == 'user-not-found') {
+          try {
+            // If the user is not found, create a new account
+            UserCredential userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(email: email, password: password);
+
+            User? user = userCredential.user;
+
+            if (user != null) {
+              await user.sendEmailVerification();
+              _showErrorSnackBar('Account created! Please verify your email. A verification link has been sent.');
+            }
+          } on FirebaseAuthException catch (e) {
+            _showErrorSnackBar('An error occurred during registration: ${e.message}');
+          }
+        } else if (e.code == 'wrong-password') {
+          _showErrorSnackBar('Wrong password provided for that user.');
+        } else {
+          _showErrorSnackBar('An error occurred: ${e.message}');
+        }
       } finally {
         setState(() {
           _isLoading = false;
@@ -165,6 +216,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
+
 
   bool _validateInputs(String email, String password) {
     if (email.isEmpty) {
@@ -354,6 +406,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
+                      GestureDetector(
+                        onTap: () => _resetPassword(_emailController.text),
+                        child: Text("forgot password?",style: TextStyle(
+                          color: Colors.indigoAccent
+                        ),),
+                      ),
+
+
                       // GestureDetector(
                       //   onTap: _resetPassword,
                       //   child: Text("forgot password?"),

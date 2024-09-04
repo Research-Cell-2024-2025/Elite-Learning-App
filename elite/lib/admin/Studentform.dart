@@ -162,7 +162,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
           'uid': user.uid,
         };
 
-        await _firestore.doc(user.uid).set(studentData);
+        await _firestore.doc(user.email).set(studentData);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Student information saved successfully!')),
@@ -199,7 +199,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-
+                  keyboardType: TextInputType.text,
                   controller: _enrollmentCodeController,
                   decoration: InputDecoration(labelText: 'Enrollment Code'),
                   validator: (value) {
@@ -210,6 +210,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: _studentNameController,
                   decoration: InputDecoration(labelText: 'Student Name'),
                   validator: (value) {
@@ -220,6 +221,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: _fatherNameController,
                   decoration: InputDecoration(labelText: 'Father Name'),
                   validator: (value) {
@@ -230,6 +232,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: _motherNameController,
                   decoration: InputDecoration(labelText: 'Mother Name'),
                   validator: (value) {
@@ -325,6 +328,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
                   },
                 ),
                 TextFormField(
+
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: 'Email'),
@@ -416,6 +420,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
                         },
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.text,
                         controller: _relativeRelationController1,
                         decoration: InputDecoration(labelText: 'Relation'),
                         validator: (value) {
@@ -441,6 +446,7 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
 
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.text,
                         controller: _relativeRelationController2,
                         decoration: InputDecoration(labelText: 'Relation'),
                       ),

@@ -6,6 +6,7 @@ import 'package:elite/admin/createTeacher.dart';
 import 'package:elite/startpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../login_page.dart';
 import 'Studentform.dart';
 import 'display.dart';
@@ -27,11 +28,21 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('email');
+    await prefs.remove('password');
+
+    // Optionally, you can also clear the isTeacher preference if you want
+    await prefs.remove('isTeacher');
+
+    // Navigate back to StartPage after signing out
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => StartPage()),
+          (Route<dynamic> route) => false,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

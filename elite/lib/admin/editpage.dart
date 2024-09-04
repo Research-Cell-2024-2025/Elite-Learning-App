@@ -167,6 +167,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
+
                   controller: _studentNameController,
                   decoration: InputDecoration(labelText: 'Student Name'),
                   validator: (value) {
@@ -177,6 +179,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
+
                   controller: _fatherNameController,
                   decoration: InputDecoration(labelText: 'Father Name'),
                   validator: (value) {
@@ -187,6 +191,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
+
                   controller: _motherNameController,
                   decoration: InputDecoration(labelText: 'Mother Name'),
                   validator: (value) {
@@ -346,6 +352,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                         },
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.text,
+
                         controller: _relativeRelationController1,
                         decoration: InputDecoration(labelText: 'Relation'),
                         validator: (value) {
@@ -371,6 +379,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.text,
                         controller: _relativeRelationController2,
                         decoration: InputDecoration(labelText: 'Relation'),
                       ),
@@ -389,6 +398,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                         decoration: InputDecoration(labelText: 'Phone'),
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.text,
+
                         controller: _relativeRelationController3,
                         decoration: InputDecoration(labelText: 'Relation'),
                       ),
@@ -400,6 +411,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   child: Text('Guardian details (optional)', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: _guardianNameController,
                   decoration: InputDecoration(labelText: 'Guardian Name'),
                 ),
@@ -414,6 +426,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   decoration: InputDecoration(labelText: 'Guardian Email'),
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: _guardianRelationController,
                   decoration: InputDecoration(labelText: 'Relation with Student'),
                 ),

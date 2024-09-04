@@ -1,23 +1,47 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/admob/v1.dart';
 import '../auth_tokens/tokens.dart';
 import 'package:http/http.dart' as http;
 
-class diary extends StatefulWidget {
-  const diary({super.key});
-
+class diaryTeacher extends StatefulWidget {
   @override
-  State<diary> createState() => _diaryState();
+  State<diaryTeacher> createState() => _diaryTeacherState();
 }
 
-class _diaryState extends State<diary> {
+class _diaryTeacherState extends State<diaryTeacher> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _bodyController = TextEditingController();
+  String standard = ' ';
+  @override
+  void initState() {
+    super.initState();
+    getStandard();
+  }
 
+  Future<void> getStandard() async {
+    final _fire = FirebaseFirestore.instance.collection('teacher');
+    final user = FirebaseAuth.instance.currentUser;
+    try {
+      DocumentSnapshot stand = await _fire.doc(user!.email).get();
+      Map<String, dynamic>? data = stand.data() as Map<String, dynamic>?;
+      String? newStandard = data?['standard'];
+      if (newStandard != null) {
+        setState(() {
+          standard = newStandard;
+        });
+      } else {
+       print("standard is empty for teacher");
+      }
+    }
+        catch(e) {
+      throw Exception(e.toString());
+        }
+  }
   @override
   void dispose() {
     _titleController.dispose();
@@ -35,7 +59,7 @@ class _diaryState extends State<diary> {
     };
     final body = jsonEncode({
       'message': {
-        'topic': 'birthdays',
+        'topic': '${standard}',
         'notification': {
           'title': '${title}',
           'body': '${description}',
@@ -45,9 +69,10 @@ class _diaryState extends State<diary> {
     final res = await http.post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       print('announcements success');
-      await fire.collection('announcements').doc().set({
+      await fire.collection('diary').doc().set({
         'title': title,
         'description': description,
+        'standard': standard,
       });
     }
   }
@@ -132,7 +157,7 @@ class _diaryState extends State<diary> {
               ),
             ),
             Expanded(child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
-              stream: FirebaseFirestore.instance.collection('announcements').snapshots(),
+              stream: FirebaseFirestore.instance.collection('diary').snapshots(),
               builder: (context, snapshots) {
                 if(!snapshots.hasData){
                   return CircularProgressIndicator();

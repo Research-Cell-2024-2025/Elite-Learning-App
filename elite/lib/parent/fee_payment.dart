@@ -20,8 +20,8 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
   }
 
   void _fetchFeeRecords() async {
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-    final data = await _firestore.collection('students').doc(currentUserId).get();
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final data = await _firestore.collection('students').doc(currentUser!.email).get();
     final ecode = data?['enrollment_code'];
     print("Enrollment Code: " + ecode);
     final snapshot = await _firestore

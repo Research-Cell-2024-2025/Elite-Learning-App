@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MarkAttendance extends StatefulWidget {
   const MarkAttendance({super.key});
@@ -13,7 +14,7 @@ class MarkAttendance extends StatefulWidget {
 class _MarkAttendanceState extends State<MarkAttendance> {
   late List<bool> isSelectedList;
   late AsyncSnapshot<QuerySnapshot> _snapshot;
-  final _id = FirebaseAuth.instance.currentUser!.uid;
+  final _id = FirebaseAuth.instance.currentUser!.email;
   String standard = "";
 
   @override
@@ -21,6 +22,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
     super.initState();
     isSelectedList = [];
     teacherRole();
+    checkAttendanceStatus();
   }
 
   void teacherRole() async {
@@ -34,6 +36,75 @@ class _MarkAttendanceState extends State<MarkAttendance> {
       print('Error fetching teacher role: $e');
     }
   }
+  bool isAttendanceMarkedToday = false; // Variable to track today's attendance status
+
+  void checkAttendanceStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toLocal().toIso8601String().split('T')[0]; // YYYY-MM-DD format
+    final lastMarkedDate = prefs.getString('lastMarkedDate') ?? '';
+
+    if (today == lastMarkedDate) {
+      setState(() {
+        isAttendanceMarkedToday = true;
+      });
+    } else {
+      setState(() {
+        isAttendanceMarkedToday = false;
+      });
+    }
+  }
+  Future<void> _showConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // User must tap button to dismiss
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Submission'),
+          content: const Text('Are you sure you want to submit the attendance?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Submit'),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Dismiss dialog
+                await _submitAttendance();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submitAttendance() async {
+    for (int i = 0; i < isSelectedList.length; i++) {
+      if (isSelectedList[i]) {
+        String userEmail = (_snapshot.data!.docs[i].data() as Map<String, dynamic>)?['email'] ?? '';
+        await updateFirestore(userEmail, true);
+      } else {
+        String userEmail = (_snapshot.data!.docs[i].data() as Map<String, dynamic>)?['email'] ?? '';
+        await updateFirestore(userEmail, false);
+      }
+    }
+
+    // Update last marked date
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toLocal().toIso8601String().split('T')[0];
+    await prefs.setString('lastMarkedDate', today);
+
+    setState(() {
+      isAttendanceMarkedToday = true;
+    });
+
+    Navigator.pop(context);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +151,19 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            blurStyle: BlurStyle.inner,
-                            blurRadius: 100.0,
-                            color: Colors.blue,
+                            blurStyle: BlurStyle.normal,
+                            blurRadius: 10.0,
+                            color: Colors.grey,
                             spreadRadius: 0.0,
                             offset: const Offset(0.0, 3.0),
                           ),
                         ],
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.purple,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                       child: ListTile(
-                        tileColor: Colors.white,
+                        tileColor: Colors.purple,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
@@ -101,7 +172,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                             Text(
                               userName,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                             Spacer(),
@@ -121,6 +192,8 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                               style: TextStyle(
                                 color: isSelectedList[index] ? Colors.greenAccent : Colors.red,
                                 fontWeight: FontWeight.bold,
+
+
                               ),
                             ),
                           ],
@@ -137,19 +210,16 @@ class _MarkAttendanceState extends State<MarkAttendance> {
             padding: EdgeInsets.all(16.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.lightBlue),
+                backgroundColor: WidgetStateProperty.all(Colors.purple),
               ),
               onPressed: () {
-                for (int i = 0; i < isSelectedList.length; i++) {
-                  if (isSelectedList[i]) {
-                    String userEmail = (_snapshot.data!.docs[i].data() as Map<String, dynamic>)?['email'] ?? '';
-                    updateFirestore(userEmail, true); 
-                  } else {
-                    String userEmail = (_snapshot.data!.docs[i].data() as Map<String, dynamic>)?['email'] ?? '';
-                    updateFirestore(userEmail, false); 
-                  }
+                if (isAttendanceMarkedToday) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Attendance has already been marked today.')),
+                  );
+                } else {
+                  _showConfirmationDialog();
                 }
-                Navigator.pop(context);
               },
               child: Text(
                 'SUBMIT',
@@ -172,17 +242,26 @@ class _MarkAttendanceState extends State<MarkAttendance> {
           .collection('students')
           .where('email', isEqualTo: email)
           .get();
+
+      final now = DateTime.now();
+      final dateString = "${now.day}-${now.month}-${now.year}";
+
       if (studentSnapshot.docs.isNotEmpty) {
         DocumentSnapshot studentDoc = studentSnapshot.docs.first;
-        int currentAttendance = (studentDoc.data() as Map<String, dynamic>).containsKey('attendance')
-            ? studentDoc.get('attendance')
-            : 0;
+        final data = studentDoc.data() as Map<String, dynamic>;
+        int currentAttendance = data.containsKey('attendance') ? data['attendance'] : 0;
+        List<dynamic> presentDates = data.containsKey('presentDates') ? List.from(data['presentDates']) : [];
+        List<dynamic> absentDates = data.containsKey('absentDates') ? List.from(data['absentDates']) : [];
         await studentDoc.reference.set({
           'attendance': isPresent ? currentAttendance + 1 : currentAttendance,
+          'presentDates': isPresent ? (presentDates..add(dateString)) : presentDates,
+          'absentDates': !isPresent ? (absentDates..add(dateString)) : absentDates,
         }, SetOptions(merge: true));
       } else {
         await FirebaseFirestore.instance.collection('students').doc(email).set({
           'attendance': isPresent ? 1 : 0,
+          'presentDates': isPresent ? [dateString] : [],
+          'absentDates': !isPresent ? [dateString] : [],
         });
       }
       await updateTotalLectures(standard);
@@ -190,29 +269,29 @@ class _MarkAttendanceState extends State<MarkAttendance> {
       print('Error updating Firestore: $e');
     }
   }
+
   Future<void> updateTotalLectures(String standard) async {
-  try {
-    DocumentReference totalLecturesRef = FirebaseFirestore.instance
-        .collection('total_lectures')
-        .doc(standard);
-    
-    DocumentSnapshot totalLecturesDoc = await totalLecturesRef.get();
+    try {
+      DocumentReference totalLecturesRef = FirebaseFirestore.instance
+          .collection('total_lectures')
+          .doc(standard);
 
-    if (!totalLecturesDoc.exists) {
-      await totalLecturesRef.set({
-        'count': 1, 
-      });
-    } else {
-      int totalLectures = (totalLecturesDoc.data() as Map<String, dynamic>).containsKey('count')
-          ? totalLecturesDoc.get('count')
-          : 0;
-      await totalLecturesRef.set({
-        'count': totalLectures + 1,
-      }, SetOptions(merge: true));
+      DocumentSnapshot totalLecturesDoc = await totalLecturesRef.get();
+
+      if (!totalLecturesDoc.exists) {
+        await totalLecturesRef.set({
+          'count': 1,
+        });
+      } else {
+        int totalLectures = (totalLecturesDoc.data() as Map<String, dynamic>).containsKey('count')
+            ? totalLecturesDoc.get('count')
+            : 0;
+        await totalLecturesRef.set({
+          'count': totalLectures + 1,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      print('Error updating total lectures: $e');
     }
-  } catch (e) {
-    print('Error updating total lectures: $e');
   }
-}
-
 }

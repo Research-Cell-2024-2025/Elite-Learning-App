@@ -13,6 +13,9 @@ import 'package:elite/parent/time_table.dart';
 import 'package:elite/parent/birthday.dart';
 import 'package:elite/login_page.dart';
 import 'package:elite/parent/copyright.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'diary.dart';
 
 class ParentModule extends StatefulWidget {
   @override
@@ -68,7 +71,7 @@ class _ParentModuleState extends State<ParentModule> {
       title: 'Diary',
       icon: Icons.menu_book_rounded,
       color: Colors.purple,
-      route: Container(),
+      route: diary(),
     ),
     //8
     ModuleItem(
@@ -140,11 +143,21 @@ class _ParentModuleState extends State<ParentModule> {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('email');
+    await prefs.remove('password');
+
+    // Optionally, you can also clear the isTeacher preference if you want
+    await prefs.remove('isTeacher');
+
+    // Navigate back to StartPage after signing out
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => StartPage()),
+          (Route<dynamic> route) => false,
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,29 +180,24 @@ class _ParentModuleState extends State<ParentModule> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
+        height: 50,
         color: Colors.purple,
-        child: GestureDetector(
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => CopyrightPage()),
-          //   );
-          // },
+
           child: Container(
-            height: 60.0,
+            height: 20.0,
             child: Center(
               child: Text(
-                '© 2023 All Rights Reserved\nDesigned by Shah and Anchor Kutchhi Engineering College',
+                '© 2024 All Rights Reserved\nDesigned by Shah and Anchor Kutchhi Engineering College',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: 10.0,
                   color: Colors.white,
                 ),
               ),
             ),
           ),
         ),
-      ),
+
       body: Column(
         children: [
           Expanded(

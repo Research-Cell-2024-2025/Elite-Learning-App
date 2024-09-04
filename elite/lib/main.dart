@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: 'AIzaSyDyGS3AJmHhbYBvzPm1hGMPST4WHkzmku8',
       appId: '1:559329487158:android:5fab07ca02ce81de156b97',
@@ -26,7 +26,7 @@ void main() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
-    announcement: false,
+    announcement: true,
     badge: true,
     carPlay: false,
     criticalAlert: false,
@@ -34,27 +34,39 @@ void main() async {
     sound: true,
   );
   DateTime now = DateTime.now();
+  String unique = DateTime.now().second.toString();
   DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1);
   Duration timeUntilMidnight = nextMidnight.difference(now);
-
   Workmanager().initialize(callbackDispatcher);
   Workmanager().registerPeriodicTask(
-    "uniqueTaskName",
+    "unique",
     "simplePeriodicTask",
     initialDelay: timeUntilMidnight,
     frequency: const Duration(hours: 24),
   );
   runApp(const MyApp());
+
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-
     print("Executing task: $task");
+
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyDyGS3AJmHhbYBvzPm1hGMPST4WHkzmku8',
+        appId: '1:559329487158:android:5fab07ca02ce81de156b97',
+        messagingSenderId: '559329487158',
+        projectId: 'elitenew-f0b99',
+        storageBucket: 'gs://elitenew-f0b99.appspot.com',
+      ),
+    );
+
     await checkBirthdaysAndSendNotifications();
     return Future.value(true);
   });
 }
+
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin
@@ -80,7 +92,6 @@ class LocalNotificationService {
           icon: '@mipmap/elitelogo',
         ),
       );
-
       await _flutterLocalNotificationsPlugin.show(
         id,
         message.notification?.title ?? 'Default Title',
@@ -99,25 +110,38 @@ Future<void> backgroundHandler(RemoteMessage msg) async {
 }
 
 Future<void> checkBirthdaysAndSendNotifications() async {
+  print('entered');
   final DateTime now = DateTime.now();
-  final String today = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}";  print("now " + today);
+  final String today =
+      "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}";
+  print("Current date: $today");
+
   final firestore = FirebaseFirestore.instance;
 
   try {
+    print("Fetching students from Firestore");
     QuerySnapshot snapshot = await firestore.collection('students').get();
+
     for (var doc in snapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       if (data.containsKey('dob')) {
         String dobString = data['dob'];
         List<String> dobParts = dobString.split('-');
         String dobDayMonth = "${dobParts[0]}-${dobParts[1]}";
-        print("hello " + dobDayMonth);
+        print("Found DOB: $dobDayMonth");
+
         if (dobDayMonth == today) {
-          print(dobDayMonth);
-          print(today);
           String name = data['student_name'];
-          print("Sending birthday notification for $name");
-          await sendTopicMessage(name);
+
+          // Check if notification has already been sent today for this person
+          bool notificationSent = await hasNotificationBeenSent(name, today);
+          if (!notificationSent) {
+            print("Sending birthday notification for $name");
+            await sendTopicMessage(name);
+            await markNotificationAsSent(name, today);
+          } else {
+            print("Notification already sent for $name today");
+          }
         }
       }
     }
@@ -126,43 +150,67 @@ Future<void> checkBirthdaysAndSendNotifications() async {
   }
 }
 
+Future<bool> hasNotificationBeenSent(String name, String date) async {
+  final firestore = FirebaseFirestore.instance;
+  QuerySnapshot snapshot = await firestore
+      .collection('sent_notifications')
+      .where('name', isEqualTo: name)
+      .where('date', isEqualTo: date)
+      .get();
+
+  return snapshot.docs.isNotEmpty;
+}
+
+Future<void> markNotificationAsSent(String name, String date) async {
+  final firestore = FirebaseFirestore.instance;
+  await firestore.collection('sent_notifications').doc().set({
+    'name': name,
+    'date': date,
+    'timestamp': FieldValue.serverTimestamp(),
+  }).catchError((e) {
+    print("Error marking notification as sent: $e");
+  });
+}
+
 Future<void> sendTopicMessage(String name) async {
-   await FirebaseFirestore.instance.collection('birthday').doc().set({
+  final firestore = FirebaseFirestore.instance;
+  await firestore.collection('birthday').doc().set({
     'name': name,
     'message': "Today is $name's birthday",
     'title': 'Happy Birthday',
     'timestamp': FieldValue.serverTimestamp(),
+  }).catchError((e) {
+    print("Error storing notification in Firestore: $e");
   });
-  
+
   final String accessToken = await getAccessToken();
-  const url =
-      'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
+  final url = 'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
   final headers = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $accessToken',
   };
-
   final body = jsonEncode({
     'message': {
       'topic': 'birthdays',
       'notification': {
         'title': 'Happy Birthday',
         'body': "Today is $name's birthday",
-      }
-    }
+      },
+    },
   });
 
-  final response =
-      await http.post(Uri.parse(url), headers: headers, body: body);
+  try {
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
 
-  if (response.statusCode == 200) {
-    print('Message sent successfully');
-  } else {
-    print('Failed to send message: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      print('Notification sent successfully to $name');
+    } else {
+      print('Failed to send notification: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (e) {
+    print("Error sending notification: $e");
   }
-
- 
 }
 
 class MyApp extends StatefulWidget {

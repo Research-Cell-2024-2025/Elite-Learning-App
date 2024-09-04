@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elite/parent/absentDates.dart';
+import 'package:elite/parent/presentDates.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,7 +35,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('students')
-          .doc(user!.uid)
+          .doc(user!.email)
           .get();
       if (snapshot.exists) {
         final data = snapshot.data();
@@ -56,7 +58,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('students')
-          .doc(user!.uid)
+          .doc(user!.email)
           .get();
       final userData = snapshot.data();
       if (userData != null && userData.containsKey('standard')) {
@@ -246,7 +248,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                     child: ListTile(
-                      leading: Icon(Icons.circle, color: Colors.white),
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => presentDates(email: user!.email!),
+                          ),
+                        );
+                      },
                       title: Text(
                         'ATTENDED',
                         style: TextStyle(color: Colors.white),
@@ -278,7 +287,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                     child: ListTile(
-                      leading: Icon(Icons.circle, color: Colors.white),
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AbsentDates(email: user!.email!),
+                          ),
+                        );
+                      },
                       title: Text(
                         'ABSENT',
                         style: TextStyle(color: Colors.white),

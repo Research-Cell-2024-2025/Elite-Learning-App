@@ -29,17 +29,17 @@ class _TimeTableState extends State<TimeTable> {
 
   Future<void> fetchStudentStandardAndTimeTable() async {
     try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
+      final user = FirebaseAuth.instance.currentUser;
 
       final studentDoc = await FirebaseFirestore.instance
-          .collection('students') // Replace with your collection name
-          .doc(uid)
+          .collection('students')
+          .doc(user!.email)
           .get();
       final data = studentDoc.data();
 
       if (studentDoc.exists) {
         setState(() {
-          studentStandard = data?['standard']; // Replace 'standard' with the field name in Firestore
+          studentStandard = data?['standard'];
         });
         if (studentStandard != null) {
           await fetchTimeTable(studentStandard!);
