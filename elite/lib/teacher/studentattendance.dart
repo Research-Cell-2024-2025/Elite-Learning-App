@@ -91,7 +91,10 @@ class _OverallAttendanceState extends State<OverallAttendance> {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: Text('Overall Attendance'),
+        title: Text('Overall Attendance',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
         backgroundColor: Colors.purple,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(

@@ -20,7 +20,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
   final _firestore = FirebaseFirestore.instance.collection('feesRecord');
 
   final _studentNameController = TextEditingController();
-  final _enrollmentCodeController = TextEditingController();
+  final _emailController = TextEditingController();
   final _studentIdController = TextEditingController();
   final _admissionNumber = TextEditingController();
   final _classOrSectionController = TextEditingController();
@@ -41,7 +41,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
   @override
   void dispose() {
     _studentNameController.dispose();
-    _enrollmentCodeController.dispose();
+    _emailController.dispose();
     _studentIdController.dispose();
     _admissionNumber.dispose();
     _classOrSectionController.dispose();
@@ -93,7 +93,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
     try {
       final studentData = {
         'student_name': _studentNameController.text,
-        'enrollment_code': _enrollmentCodeController.text,
+        'email': _emailController.text,
         'student_id': _studentIdController.text,
         'admission_no': _admissionNumber.text,
         'class': _classOrSectionController.text,
@@ -111,7 +111,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
         'payment_status': _selectedPaymentStatus,
       };
 
-      await _firestore.doc(_enrollmentCodeController.text).set(studentData);
+      await _firestore.doc(_emailController.text).set(studentData);
       sendFeesNotification();
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +128,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
   Future<void> sendFeesNotification() async {
     final String accessToken = await getAccessToken();
     FirebaseFirestore fire =  FirebaseFirestore.instance;
-    final data = await fire.collection('students').where('enrollment_code', isEqualTo: _enrollmentCodeController.text).get();
+    final data = await fire.collection('students').where('email', isEqualTo: _emailController.text).get();
     final token = data.docs.first.data()['token'];
     final url = "https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send";
     final headers = {
@@ -140,7 +140,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
         'token':'$token',
         'notification':{
           'title': 'Fees Reminder',
-          'body': 'Click here to see fees'
+          'body': 'Open Elite Learning to see Fee reminder'
         }
       }
     });
@@ -166,7 +166,10 @@ class _AddFeesPageState extends State<AddFeesPage> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Personal Information Form'),
+        title: Text('Personal Information Form',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -176,8 +179,8 @@ class _AddFeesPageState extends State<AddFeesPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: _enrollmentCodeController,
-                  decoration: InputDecoration(labelText: 'Enrollment Code'),
+                  controller: _emailController,
+                  decoration: InputDecoration(labelText: 'Email'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter unique enrollment code';

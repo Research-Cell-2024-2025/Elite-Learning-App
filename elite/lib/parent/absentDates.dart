@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class AbsentDates extends StatefulWidget {
   final String email;
@@ -32,8 +33,21 @@ class _AbsentDatesState extends State<AbsentDates> {
 
       Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
       List<String> absentDates = List<String>.from(data['absentDates'] ?? []);
+      List<String> formattedDates = absentDates.map((dateString) {
+        List<String> parts = dateString.split('-');  // Split the string by '-'
+        int day = int.parse(parts[0]);               // Parse day
+        int month = int.parse(parts[1]);             // Parse month
+        int year = int.parse(parts[2]);              // Parse year
 
-      return absentDates;
+        // Create a DateTime object from the parsed values
+        DateTime date = DateTime(year, month, day);
+
+        // Format the date as 'd MMMM' (e.g., '2 September')
+        return DateFormat('d MMMM yyyy').format(date);
+      }).toList();
+
+      return formattedDates;
+
     } catch (e) {
       print('Error fetching absent dates: $e');
       return [];
@@ -50,6 +64,7 @@ class _AbsentDatesState extends State<AbsentDates> {
           'Absent Dates',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

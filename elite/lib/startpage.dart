@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elite/parent/parent_module.dart';
 import 'package:elite/teacher/teacherDashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,19 +54,35 @@ class _StartPageState extends State<StartPage> {
       return false;
     }
   }
-  void routeUser() {
+
+  void routeUser() async {
+    final user = FirebaseAuth.instance.currentUser!.email;
+
+    // Fetch user data from Firestore
+    final DocumentSnapshot userData = await FirebaseFirestore.instance.collection('students').doc(user).get();
+
+    // Extract the role from Firestore
+    final String role = userData['role']; // assuming 'role' is the field that stores user roles
+
+    // Check the user's role and navigate accordingly
     if (isTeacher) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => dashboard()),
+        MaterialPageRoute(builder: (context) => dashboard()), // Assuming this is the dashboard for teachers
+      );
+    } else if (role == 'admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()), // Assuming this is the admin page
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ParentModule()),
+        MaterialPageRoute(builder: (context) => ParentModule()), // Assuming this is the parent module
       );
     }
   }
+
 
 
 
@@ -82,8 +99,8 @@ class _StartPageState extends State<StartPage> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/eliteimg.jpg'),
-                fit: BoxFit.cover, // Changed to cover for better fill
+                image: AssetImage('assets/eliteimg.jpg',),
+                fit: BoxFit.fill, // Changed to cover for better fill
               ),
             ),
           ),
@@ -157,7 +174,8 @@ class _StartPageState extends State<StartPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.asset('assets/student.png',
-                                width: 60, height: 60),
+                                width: 60, height: 60,
+                            ),
                             SizedBox(height: 10),
                             Text(
                               'STUDENT LOGIN',

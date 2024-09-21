@@ -116,6 +116,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
           'Mark Attendance',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

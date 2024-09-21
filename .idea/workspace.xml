@@ -5,30 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb14b06f-5ca8-4414-a4d7-296db318f34b" name="Changes" comment="teacher">
-      <change afterPath="$PROJECT_DIR$/elite/assets/student.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elite/assets/teacher.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elite/lib/parent/absentDates.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elite/lib/parent/presentDates.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elite/lib/teacher/studentattendance.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/elite/assets/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/elite/lib/admin/addAboutUs.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/elite/lib/admin/editTeacher.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/elite/lib/admin/teacherList.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/elite/lib/parent/greetingCard.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/admin/Homepage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/Homepage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/admin/Studentform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/Studentform.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/admin/addEvent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/addEvent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elite/lib/admin/addparent.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/admin/addFeespage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/addFeespage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/admin/addTimetable.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/addTimetable.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/admin/announcements.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/announcements.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/admin/carouselimg.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/carouselimg.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/admin/createTeacher.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/createTeacher.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elite/lib/admin/diary.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/teacher/diary.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/admin/display.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/display.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/admin/editpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/admin/editpage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elite/lib/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/login_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elite/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/absentDates.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/absentDates.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/announcements.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/announcements.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/parent/attendance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/attendance.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/elite/lib/parent/copyright.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/copyright.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/birthday.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/birthday.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/contact_us.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/contact_us.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/parent/diary.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/diary.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/parent/fee_payment.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/fee_payment.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/gallery.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/gallery.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/parent/parent_module.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/parent_module.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/parent/presentDates.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/presentDates.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/parent/time_table.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/parent/time_table.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/startpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/startpage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/teacher/diary.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/teacher/diary.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/teacher/markAttendance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/teacher/markAttendance.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/lib/teacher/studentattendance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/teacher/studentattendance.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elite/lib/teacher/teacherDashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/elite/lib/teacher/teacherDashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/elite/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/elite/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/elite/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/elite/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elite/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/elite/windows/flutter/generated_plugins.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,26 +78,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Flutter.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Jay Mhatre/StudioProjects/Elite/elite/assets&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Flutter.Unnamed.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Jay Mhatre/StudioProjects/ED-MAX",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Jay Mhatre\StudioProjects\Elite\elite\assets" />
@@ -192,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725198755801</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="teacher">
+      <option name="closed" value="true" />
+      <created>1725456612489</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1725456612489</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -231,77 +253,77 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>84</line>
+          <line>85</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>74</line>
+          <line>75</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>73</line>
+          <line>74</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>72</line>
+          <line>73</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>71</line>
+          <line>72</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>70</line>
+          <line>71</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>69</line>
+          <line>70</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>39</line>
+          <line>40</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>38</line>
+          <line>39</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>37</line>
+          <line>38</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>36</line>
+          <line>37</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>35</line>
+          <line>36</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>34</line>
+          <line>35</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/parent/parent_module.dart</url>
-          <line>89</line>
+          <line>90</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/elite/lib/startpage.dart</url>
-          <line>123</line>
+          <line>140</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>

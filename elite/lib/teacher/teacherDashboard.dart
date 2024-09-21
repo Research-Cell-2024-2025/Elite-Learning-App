@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elite/teacher/diary.dart';
 import 'package:elite/teacher/markAttendance.dart';
 import 'package:elite/teacher/studentattendance.dart';
@@ -17,6 +18,20 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboardState extends State<dashboard> {
+  late var stand = '';
+  @override
+  void initState() {
+    super.initState();
+    standard();
+  }
+  void standard() async{
+    final teacher = FirebaseAuth.instance.currentUser?.email;
+    final teacherData = await FirebaseFirestore.instance.collection('teacher').doc(teacher).get();
+    setState(() {
+      stand = teacherData['standard'];
+    });
+
+  }
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -45,6 +60,7 @@ class _dashboardState extends State<dashboard> {
           'Teacher',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -60,7 +76,7 @@ class _dashboardState extends State<dashboard> {
         children:<Widget> [
               DrawerHeader(
               child: Text(
-                'Menu',
+                'Class $stand',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
               decoration: BoxDecoration(
@@ -69,7 +85,10 @@ class _dashboardState extends State<dashboard> {
             ),
               ListTile(
               leading: Icon(Icons.school),
-              title: Text('Add attendance'),
+              title: Text('Add attendance',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold
+                ),),
               onTap: () {
                 Navigator.push(
                   context,
@@ -81,7 +100,10 @@ class _dashboardState extends State<dashboard> {
             ),
           ListTile(
             leading: Icon(Icons.school),
-            title: Text('Add Classwork'),
+            title: Text('Add Classwork',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold
+              ),),
             onTap: () {
               Navigator.push(
                 context,
@@ -93,7 +115,10 @@ class _dashboardState extends State<dashboard> {
           ),
           ListTile(
             leading: Icon(Icons.note_alt_sharp),
-            title: Text(' Attendance record'),
+            title: Text(' Attendance record',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold
+              ),),
             onTap: () {
               Navigator.push(
                 context,
@@ -107,7 +132,7 @@ class _dashboardState extends State<dashboard> {
       ],)
     ),
       body: Center(
-        child: Text('Welcome to the Teacher dashboard'),
+        child: Text('Welcome to the Teacher dashboard of $stand'),
       ),
     );
   }

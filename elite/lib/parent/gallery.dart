@@ -26,7 +26,10 @@ class _GalleryState extends State<Gallery> {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: const Text('Gallery'),
+        title: const Text('Gallery',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
         backgroundColor: Colors.purple,
       ),
       body: WebViewWidget(

@@ -1,25 +1,21 @@
+import 'package:elite/admin/editTeacher.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'editpage.dart';
-
-class StudentListPage extends StatelessWidget {
-
-
-
+class TeacherListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Student List',
-        style: TextStyle(
-          fontWeight: FontWeight.bold
-        ),),
+        title: Text(
+          'Teacher List',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('students').snapshots(),
+        stream: FirebaseFirestore.instance.collection('teacher').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -28,22 +24,21 @@ class StudentListPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No students found.'));
+            return Center(child: Text('No teachers found.'));
           }
 
-          final students = snapshot.data!.docs;
+          final teachers = snapshot.data!.docs;
 
           return ListView.builder(
-            itemCount: students.length,
+            itemCount: teachers.length,
             itemBuilder: (context, index) {
-              final student = students[index];
-              final studentData = student.data() as Map<String, dynamic>;
+              final teacher = teachers[index];
+              final teacherData = teacher.data() as Map<String, dynamic>;
 
               return ListTile(
-                title: Text(studentData['student_name'] ?? 'No name'),
-                subtitle: Text('Email: ${studentData['email'] ?? 'Unknown'}'),
-                trailing: true
-                    ? Row(
+                title: Text(teacherData['name'] ?? 'No name'),
+                subtitle: Text('Email: ${teacherData['email'] ?? 'Unknown'}'),
+                trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
@@ -52,7 +47,7 @@ class StudentListPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditStudentPage(studentId: student.id),
+                            builder: (context) => EditTeacher(email: teacherData['email']),
                           ),
                         );
                       },
@@ -60,12 +55,11 @@ class StudentListPage extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
-                        _deleteStudent(context, student.id);
+                        _deleteTeacher(context, teacher.id);
                       },
                     ),
                   ],
-                )
-                    : null,
+                ),
               );
             },
           );
@@ -74,15 +68,15 @@ class StudentListPage extends StatelessWidget {
     );
   }
 
-  void _deleteStudent(BuildContext context, String studentId) {
+  void _deleteTeacher(BuildContext context, String teacherId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Student',
-          style: TextStyle(
-              fontWeight: FontWeight.bold
-          ),),
-        content: Text('Are you sure you want to delete this student?'),
+        title: Text(
+          'Delete Teacher',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text('Are you sure you want to delete this teacher?'),
         actions: [
           TextButton(
             onPressed: () {
@@ -93,15 +87,15 @@ class StudentListPage extends StatelessWidget {
           TextButton(
             onPressed: () async {
               try {
-                await FirebaseFirestore.instance.collection('students').doc(studentId).delete();
+                await FirebaseFirestore.instance.collection('teacher').doc(teacherId).delete();
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Student deleted successfully')),
+                  SnackBar(content: Text('Teacher deleted successfully')),
                 );
               } catch (e) {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error deleting student: $e')),
+                  SnackBar(content: Text('Error deleting teacher: $e')),
                 );
               }
             },

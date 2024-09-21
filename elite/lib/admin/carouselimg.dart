@@ -83,6 +83,7 @@ class _ImagesState extends State<Images> {
           'Carousel Images',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Colors.purple,

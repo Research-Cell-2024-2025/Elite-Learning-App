@@ -100,13 +100,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         title: Text(
           'Attendance',
           style: TextStyle(
-            color: Colors.purple,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
       body: Container(
         color: Color.fromARGB(255, 245, 224, 251),
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

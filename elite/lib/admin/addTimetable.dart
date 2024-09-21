@@ -129,6 +129,7 @@ class _AddTimeTableState extends State<AddTimeTable> {
           'Add Timetable',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

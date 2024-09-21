@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:googleapis/admob/v1.dart';
 import '../auth_tokens/tokens.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class announcements extends StatefulWidget {
   const announcements({super.key});
@@ -22,6 +23,7 @@ class _announcementsState extends State<announcements> {
   void dispose() {
     _titleController.dispose();
     _bodyController.dispose();
+    super.dispose();
   }
 
   Future<void> pushNotification(String title, String description) async {
@@ -48,24 +50,27 @@ class _announcementsState extends State<announcements> {
       await fire.collection('announcements').doc().set({
         'title': title,
         'description': description,
+        'date': Timestamp.now(),
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return (Scaffold(
+    return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Add Announcements'),
+        title: Text('Add Announcements',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Container(
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(40),
-
               child: Column(
                 children: [
                   TextField(
@@ -89,7 +94,7 @@ class _announcementsState extends State<announcements> {
                           borderRadius: BorderRadius.circular(10)),
                       border: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple.withOpacity(0.3)),
+                          BorderSide(color: Colors.purple.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
@@ -117,7 +122,7 @@ class _announcementsState extends State<announcements> {
                           borderRadius: BorderRadius.circular(10)),
                       border: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.purple.withOpacity(0.3)),
+                          BorderSide(color: Colors.purple.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
@@ -131,31 +136,56 @@ class _announcementsState extends State<announcements> {
                 ],
               ),
             ),
-            Expanded(child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
-              stream: FirebaseFirestore.instance.collection('announcements').snapshots(),
-              builder: (context, snapshots) {
-                if(!snapshots.hasData){
-                  return CircularProgressIndicator();
-                }
-                List<DocumentSnapshot> announcements = snapshots.data!.docs;
-                return ListView.builder(
-                  itemCount: announcements.length,
-                  itemBuilder: (context , index){
-                    Map<String,dynamic> data = announcements[index].data() as Map<String, dynamic>;
-                    String title = data['title'];
-                    String description = data['description'];
-                    return ListTile(
-                      leading: Icon(Icons.announcement),
-                      title: Text(title),
-                      subtitle: Text(description),
-                    );
-                  },
-                );
-              },
-            ))
+            Expanded(
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: FirebaseFirestore.instance
+                    .collection('announcements')
+                    .orderBy('date', descending: true)
+                    .snapshots(),
+                builder: (context, snapshots) {
+                  if (!snapshots.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  List<DocumentSnapshot> announcements = snapshots.data!.docs;
+                  return ListView.builder(
+                    itemCount: announcements.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> data =
+                      announcements[index].data() as Map<String, dynamic>;
+                      String title = data['title'];
+                      String description = data['description'];
+                      Timestamp timestamp = data['date'];
+                      DateTime date = timestamp.toDate();
+                      String formattedDate =
+                      DateFormat('MMM d, yyyy - h:mm a').format(date);
+                      return ListTile(
+                        leading: Icon(Icons.announcement,color: Colors.purple,),
+                        title: Text(title,
+                        style: TextStyle(color: Colors.purple,
+                        fontWeight: FontWeight.bold),),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(description),
+                            SizedBox(height: 4),
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
-    ));
+    );
   }
 }

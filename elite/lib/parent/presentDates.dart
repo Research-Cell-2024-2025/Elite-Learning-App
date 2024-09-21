@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class presentDates extends StatefulWidget {
   final String email;
@@ -33,7 +34,21 @@ class _presentDatesState extends State<presentDates> {
       Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
       List<String> presentDates = List<String>.from(data['presentDates'] ?? []);
 
-      return presentDates;
+      // Parse and format the dates from '2-9-2024' to 'day month' (e.g., '2 September')
+      List<String> formattedDates = presentDates.map((dateString) {
+        List<String> parts = dateString.split('-');  // Split the string by '-'
+        int day = int.parse(parts[0]);               // Parse day
+        int month = int.parse(parts[1]);             // Parse month
+        int year = int.parse(parts[2]);              // Parse year
+
+        // Create a DateTime object from the parsed values
+        DateTime date = DateTime(year, month, day);
+
+        // Format the date as 'd MMMM' (e.g., '2 September')
+        return DateFormat('d MMMM yyyy').format(date);
+      }).toList();
+
+      return formattedDates;
     } catch (e) {
       print('Error fetching present dates: $e');
       return [];
@@ -50,6 +65,7 @@ class _presentDatesState extends State<presentDates> {
           'Present Dates',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),

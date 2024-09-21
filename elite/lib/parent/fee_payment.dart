@@ -22,11 +22,11 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
   void _fetchFeeRecords() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     final data = await _firestore.collection('students').doc(currentUser!.email).get();
-    final ecode = data?['enrollment_code'];
-    print("Enrollment Code: " + ecode);
+    final ecode = currentUser!.email;
+
     final snapshot = await _firestore
         .collection('feesRecord')
-        .where('enrollment_code', isEqualTo: ecode)
+        .where('email', isEqualTo: ecode)
         .get();
 
     setState(() {

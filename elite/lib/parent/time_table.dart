@@ -77,6 +77,7 @@ class _TimeTableState extends State<TimeTable> {
           'TimeTable',
           style: TextStyle(
             color: Colors.white,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),

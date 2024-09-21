@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/admob/v1.dart';
+import 'package:intl/intl.dart';
 import '../auth_tokens/tokens.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,13 +36,13 @@ class _diaryTeacherState extends State<diaryTeacher> {
           standard = newStandard;
         });
       } else {
-       print("standard is empty for teacher");
+        print("standard is empty for teacher");
       }
-    }
-        catch(e) {
+    } catch (e) {
       throw Exception(e.toString());
-        }
+    }
   }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -73,6 +74,7 @@ class _diaryTeacherState extends State<diaryTeacher> {
         'title': title,
         'description': description,
         'standard': standard,
+        'date': Timestamp.now(),
       });
     }
   }
@@ -83,14 +85,16 @@ class _diaryTeacherState extends State<diaryTeacher> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Add Diary'),
+        title: Text(
+          'Add Diary',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(40),
-
               child: Column(
                 children: [
                   TextField(
@@ -156,24 +160,47 @@ class _diaryTeacherState extends State<diaryTeacher> {
                 ],
               ),
             ),
-            Expanded(child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
-              stream: FirebaseFirestore.instance.collection('diary').snapshots(),
+            Expanded(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance
+                  .collection('diary')
+                  .orderBy('date', descending: true)
+                  .snapshots(),
               builder: (context, snapshots) {
-                if(!snapshots.hasData){
+                if (!snapshots.hasData) {
                   return CircularProgressIndicator();
                 }
                 List<DocumentSnapshot> announcements = snapshots.data!.docs;
                 return ListView.builder(
                   itemCount: announcements.length,
-                  itemBuilder: (context , index){
-                    Map<String,dynamic> data = announcements[index].data() as Map<String, dynamic>;
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data =
+                        announcements[index].data() as Map<String, dynamic>;
                     String title = data['title'];
                     String description = data['description'];
+                    Timestamp timestamp = data['date'];
+                    DateTime date = timestamp.toDate();
+                    String formattedDate =
+                        DateFormat('MMM d, yyyy - h:mm a').format(date);
                     return ListTile(
-                      leading: Icon(Icons.announcement),
-                      title: Text(title),
-                      subtitle: Text(description),
-                    );
+                        leading: Icon(Icons.note_alt_sharp,
+                        color: Colors.purple,),
+                        title: Text(title,
+                        style: TextStyle(color: Colors.purple),),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(description),
+                            SizedBox(height: 4),
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ));
                   },
                 );
               },

@@ -146,7 +146,10 @@ class _EditStudentPageState extends State<EditStudentPage> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Edit Student Information'),
+        title: Text('Edit Student Information',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

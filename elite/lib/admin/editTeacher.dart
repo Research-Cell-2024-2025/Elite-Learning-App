@@ -3,63 +3,73 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Createteacher extends StatefulWidget {
-  const Createteacher({super.key});
+class EditTeacher extends StatefulWidget {
+  final String email; // Pass the email of the teacher to edit
+
+  const EditTeacher({super.key, required this.email});
 
   @override
-  State<Createteacher> createState() => _CreateteacherState();
+  State<EditTeacher> createState() => _EditTeacherState();
 }
 
-class _CreateteacherState extends State<Createteacher> {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-      final _key = GlobalKey<FormState>();
+class _EditTeacherState extends State<EditTeacher> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _key = GlobalKey<FormState>();
+  final _firestore = FirebaseFirestore.instance.collection('teacher');
 
-      final _firestore = FirebaseFirestore.instance.collection('teacher');
   TextEditingController _teacherName = TextEditingController();
   TextEditingController _teacherEmail = TextEditingController();
-  TextEditingController _teacherPassword = TextEditingController();
   TextEditingController _teacherPhoneNumber = TextEditingController();
-    String _selectedGender = 'Male';
+  TextEditingController _teacherPassword = TextEditingController();
+  String _selectedGender = 'Male';
   String _selectedStandard = 'Nursery';
   bool _showPassword = false;
 
-  Future<void> add() async {
-    try{
-      final userData = await _auth.createUserWithEmailAndPassword(
-        email: _teacherEmail.text,
-        password: _teacherPassword.text,
+  @override
+  void initState() {
+    super.initState();
+    _loadTeacherData();
+  }
+
+  Future<void> _loadTeacherData() async {
+    DocumentSnapshot documentSnapshot = await _firestore.doc(widget.email).get();
+    if (documentSnapshot.exists) {
+      var data = documentSnapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _teacherName.text = data['name'];
+        _teacherEmail.text = data['email'];
+        _teacherPhoneNumber.text = data['phoneNumber'];
+        _selectedGender = data['gender'];
+        _selectedStandard = data['standard'];
+      });
+    }
+  }
+
+
+  Future<void> update() async {
+    try {
+      final teacherData = {
+        'name': _teacherName.text,
+        'email': _teacherEmail.text,
+        'phoneNumber': _teacherPhoneNumber.text,
+        'gender': _selectedGender,
+        'standard': _selectedStandard,
+      };
+      await _firestore.doc(widget.email).update(teacherData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Teacher updated successfully!')),
       );
-      final user = userData.user;
-      if(user != null){
-        final teacherData = {
-          'name': _teacherName.text,
-          'email': _teacherEmail.text,
-          'password': _teacherPassword.text,
-          'phoneNumber': _teacherPhoneNumber.text,
-          'gender': _selectedGender,
-         'standard': _selectedStandard,
-         'role': "teacher",
-         'uid': user.uid,
-        };
-          await _firestore.doc(user.email).set(teacherData);
-          ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Teacher created successfully!')),
-        );
-        _key.currentState!.reset();    
-        }
-
-
+      _key.currentState!.reset();
+    } catch (e) {
+      throw Exception(e);
     }
-    catch(e){
-     throw new Exception(e);
-         }
   }
-      void _submitForm() {
+
+  void _submitForm() {
     if (_key.currentState!.validate()) {
-      add();
+      update();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +77,10 @@ class _CreateteacherState extends State<Createteacher> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Personal Information Form',
-          style: TextStyle(
-              fontWeight: FontWeight.bold
-          ),),
+        title: Text(
+          'Edit Teacher Information',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -89,8 +99,8 @@ class _CreateteacherState extends State<Createteacher> {
                     return null;
                   },
                 ),
-                 TextFormField(
-                 keyboardType: TextInputType.emailAddress,
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _teacherEmail,
                   decoration: InputDecoration(labelText: "Teacher's Email"),
                   validator: (value) {
@@ -101,7 +111,7 @@ class _CreateteacherState extends State<Createteacher> {
                   },
                 ),
                 TextFormField(
-                 keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.number,
                   controller: _teacherPhoneNumber,
                   decoration: InputDecoration(labelText: "Teacher's phone number"),
                   validator: (value) {
@@ -110,32 +120,6 @@ class _CreateteacherState extends State<Createteacher> {
                     }
                     return null;
                   },
-                ),
-           TextFormField(
-                  obscureText: _showPassword,
-                  keyboardType: TextInputType.visiblePassword,
-                  controller: _teacherPassword,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter Password';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _showPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _showPassword = !_showPassword;
-                        });
-                      },
-                    ),
-                    label: Text('Password'),
-                  ),
                 ),
                 DropdownButtonFormField<String>(
                   value: _selectedStandard,
@@ -167,11 +151,10 @@ class _CreateteacherState extends State<Createteacher> {
                   },
                   decoration: InputDecoration(labelText: 'Gender'),
                 ),
-     
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text('Submit'),
+                  child: Text('Update'),
                 ),
               ],
             ),

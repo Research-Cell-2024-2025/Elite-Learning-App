@@ -189,7 +189,10 @@ class _StudentFormScreenState extends State<StudentFormScreen> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Personal Information Form'),
+        title: Text('Personal Information Form',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

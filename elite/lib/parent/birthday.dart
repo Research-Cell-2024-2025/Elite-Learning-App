@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../auth_tokens/tokens.dart';
 import '../login_page.dart';
+import 'greetingCard.dart';
 
 class Birthday extends StatefulWidget {
   const Birthday({super.key});
@@ -42,13 +43,14 @@ class _BirthdayState extends State<Birthday> {
         }
       }
     } catch (e) {
-      print(e);
+      print('failed notiiiiiii');
     }
   }
 
   Future<void> sendTopicMessage(String name) async {
     final String accessToken = await getAccessToken();
-    const url = 'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
+    const url =
+        'https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send';
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $accessToken',
@@ -88,13 +90,19 @@ class _BirthdayState extends State<Birthday> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text('Birthday Reminder'),
+        title: Text(
+          'Birthdays',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: firestore.collection('birthday').snapshots(),
+              stream: firestore
+                  .collection('birthday')
+                  .orderBy('timestamp', descending: false)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
@@ -107,12 +115,14 @@ class _BirthdayState extends State<Birthday> {
                     Map<String, dynamic> birthdayData =
                         birthdays[index].data() as Map<String, dynamic>;
                     String name = birthdayData['name'];
-                    String message = birthdayData['message'];
 
-                    return ListTile(
-                      leading: Icon(Icons.cake),
-                      title: Text(name),
-                      subtitle: Text(message),
+                    String imageUrl = '';
+                    Timestamp date = birthdayData['timestamp'];
+
+                    return GreetingCard(
+                      timestamp: date,
+                      imageUrl: '',
+                      name: name,
                     );
                   },
                 );
