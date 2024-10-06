@@ -37,7 +37,8 @@ class _diaryState extends State<diary> {
 
   @override
   Widget build(BuildContext context) {
-    return (Scaffold(
+    return (
+      Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
@@ -83,18 +84,25 @@ class _diaryState extends State<diary> {
                         style: TextStyle(
                             color: Colors.purple, fontWeight: FontWeight.bold),
                       ),
-                      subtitle:  Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      subtitle:  Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(description),
-                          SizedBox(height: 4),
-                          Text(
-                            formattedDate,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(height: 4),
+                              Text(
+                                formattedDate,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
+
                         ],
                       )
                     );

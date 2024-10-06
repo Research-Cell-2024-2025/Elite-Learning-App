@@ -105,213 +105,216 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
         ),
       ),
-      body: Container(
-        color: Color.fromARGB(255, 245, 224, 251),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
-                      offset: const Offset(0.0, 3.0),
-                    ),
-                  ],
-                  color: Colors.purple,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Text(
-                  '$formattedDate',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        color: Colors.white,
-                        blurRadius: 5,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.sizeOf(context).height,
+          color: Color.fromARGB(255, 245, 224, 251),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.0,
+                        spreadRadius: 3.0,
+                        offset: const Offset(0.0, 3.0),
                       ),
                     ],
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
-                      offset: const Offset(0.0, 5.0),
-                    ),
-                  ],
-                  color: Colors.purple,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Center(
-                  child: PieChart(
-                    dataMap: dataMap,
-                    colorList: [
-                      Color.fromARGB(255, 0, 255, 140),
-                      Color.fromARGB(255, 255, 0, 0)
-                    ],
-                    chartType: ChartType.ring,
-                    ringStrokeWidth: 40,
-                    chartRadius: MediaQuery.of(context).size.width / 2,
-                    centerWidget: Text(
-                      textAlign: TextAlign.center,
-                      'Total Lectures \n $totalAttendance',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        wordSpacing: 0.1,
-                        shadows: [
-                          Shadow(
-                            color: Colors.white,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                    ),
-                    legendOptions: LegendOptions(
-                      legendTextStyle: TextStyle(color: Colors.white),
-                      showLegendsInRow: true,
-                      legendPosition: LegendPosition.bottom,
-                    ),
-                    chartValuesOptions: ChartValuesOptions(
-                      showChartValuesOutside: true,
-                      showChartValues: true,
-                      showChartValuesInPercentage: true,
-                      showChartValueBackground: true,
-                      chartValueBackgroundColor: Colors.white,
-                      chartValueStyle: TextStyle(
-                        color: Color.fromRGBO(13, 34, 77, 1.0),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
-                      offset: const Offset(0.0, 5.0),
-                    ),
-                  ],
-                  color: Colors.purple,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Text(
-                  'ATTENDANCE:',
-                  style: TextStyle(
-                      fontSize: 16,
+                  child: Text(
+                    '$formattedDate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ),
-              SizedBox(height: 10),
-              Column(
-                children: [
-                  Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
-                      offset: const Offset(0.0, 5.0),
-                    ),
-                  ],
-                  color: Colors.purple,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                    child: ListTile(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => presentDates(email: user!.email!),
-                          ),
-                        );
-                      },
-                      title: Text(
-                        'ATTENDED',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      trailing: Text(
-                        attendance.toString(),
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
+                      shadows: [
+                        Shadow(
+                          color: Colors.white,
+                          blurRadius: 5,
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 2.0,
-                      spreadRadius: 3.0,
-                      offset: const Offset(0.0, 5.0),
-                    ),
-                  ],
-                  color: Colors.purple,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
-                    child: ListTile(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AbsentDates(email: user!.email!),
-                          ),
-                        );
-                      },
-                      title: Text(
-                        'ABSENT',
-                        style: TextStyle(color: Colors.white),
+                SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.0,
+                        spreadRadius: 3.0,
+                        offset: const Offset(0.0, 5.0),
                       ),
-                      trailing: Text(
-                        (totalAttendance - attendance).toString(),
+                    ],
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Center(
+                    child: PieChart(
+                      dataMap: dataMap,
+                      colorList: [
+                        Color.fromARGB(255, 0, 255, 140),
+                        Color.fromARGB(255, 255, 0, 0)
+                      ],
+                      chartType: ChartType.ring,
+                      ringStrokeWidth: 40,
+                      chartRadius: MediaQuery.of(context).size.width / 2,
+                      centerWidget: Text(
+                        textAlign: TextAlign.center,
+                        'Total Lectures \n $totalAttendance',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          wordSpacing: 0.1,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white,
+                              blurRadius: 5,
+                            ),
+                          ],
+                        ),
+                      ),
+                      legendOptions: LegendOptions(
+                        legendTextStyle: TextStyle(color: Colors.white),
+                        showLegendsInRow: true,
+                        legendPosition: LegendPosition.bottom,
+                      ),
+                      chartValuesOptions: ChartValuesOptions(
+                        showChartValuesOutside: true,
+                        showChartValues: true,
+                        showChartValuesInPercentage: true,
+                        showChartValueBackground: true,
+                        chartValueBackgroundColor: Colors.white,
+                        chartValueStyle: TextStyle(
+                          color: Color.fromRGBO(13, 34, 77, 1.0),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.0,
+                        spreadRadius: 3.0,
+                        offset: const Offset(0.0, 5.0),
+                      ),
+                    ],
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Text(
+                    'ATTENDANCE:',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Column(
+                  children: [
+                    Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.0,
+                        spreadRadius: 3.0,
+                        offset: const Offset(0.0, 5.0),
+                      ),
+                    ],
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                      child: ListTile(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => presentDates(email: user!.email!),
+                            ),
+                          );
+                        },
+                        title: Text(
+                          'ATTENDED',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: Text(
+                          attendance.toString(),
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(10, 20, 20, 20),
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.0,
+                        spreadRadius: 3.0,
+                        offset: const Offset(0.0, 5.0),
+                      ),
+                    ],
+                    color: Colors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                      child: ListTile(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AbsentDates(email: user!.email!),
+                            ),
+                          );
+                        },
+                        title: Text(
+                          'ABSENT',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: Text(
+                          (totalAttendance - attendance).toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

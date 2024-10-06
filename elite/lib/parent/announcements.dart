@@ -42,7 +42,7 @@ class _parentAnnouncementsState extends State<parentAnnouncements> {
           children: [
             Expanded(child: StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
               stream: FirebaseFirestore.instance.collection('announcements')
-            .orderBy('date', descending: true)
+            .orderBy('date', descending: false)
           .snapshots(),
               builder: (context, snapshots) {
                 if(!snapshots.hasData){
@@ -64,18 +64,25 @@ class _parentAnnouncementsState extends State<parentAnnouncements> {
                       title: Text(title,
                         style: TextStyle(color: Colors.purple,
                         fontWeight: FontWeight.bold) ,),
-                      subtitle:Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      subtitle:Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(description),
-                        SizedBox(height: 4),
-                        Text(
-                          formattedDate,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
+
                       ],
                     ),
 

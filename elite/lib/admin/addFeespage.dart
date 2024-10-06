@@ -38,6 +38,8 @@ class _AddFeesPageState extends State<AddFeesPage> {
   String _selectedPaymentStatus = 'Successful';
   String _selectedAcademicYear = '2024-25';
 
+  List<Map<String, dynamic>> feeRecords = [];
+
   @override
   void dispose() {
     _studentNameController.dispose();
@@ -91,6 +93,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
 
   Future<void> add() async {
     try {
+
       final studentData = {
         'student_name': _studentNameController.text,
         'email': _emailController.text,
@@ -109,9 +112,16 @@ class _AddFeesPageState extends State<AddFeesPage> {
         'payment_mode': _selectedPaymentMode,
         'payment_reciept_no': _paymentRecieptNoController.text,
         'payment_status': _selectedPaymentStatus,
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
-      await _firestore.doc(_emailController.text).set(studentData);
+      final studentDocRef = _firestore.doc(_emailController.text);
+
+      // Set the student data
+      await studentDocRef.set(studentData, SetOptions(merge: true));
+
+      // Add the fee record to the 'feeRecords' subcollection
+      await studentDocRef.collection('feeRecords').add(studentData);
       sendFeesNotification();
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -140,7 +150,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
         'token':'$token',
         'notification':{
           'title': 'Fees Reminder',
-          'body': 'Open Elite Learning to see Fee reminder'
+          'body': 'Open Elite Learning Centre to see Fee reminder'
         }
       }
     });
@@ -183,7 +193,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   decoration: InputDecoration(labelText: 'Email'),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter unique enrollment code';
+                      return 'Please enter unique email ';
                     }
                     return null;
                   },

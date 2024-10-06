@@ -95,147 +95,165 @@ class _StartPageState extends State<StartPage> {
       body: Stack(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/eliteimg.jpg',),
-                fit: BoxFit.fill, // Changed to cover for better fill
-              ),
-            ),
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/clouds.jpg'),
+                  fit: BoxFit.fill,
+                  opacity: 0.7,
+                )),
           ),
-          Center(
-            child: SingleChildScrollView(
-              child: GlassmorphicContainer(
-                margin: EdgeInsets.symmetric(horizontal: 25),
-                padding: EdgeInsets.symmetric(vertical: 70, horizontal: 20),
-                width: double.infinity,
-                height: 500, // Increased height for better spacing
-                borderRadius: 20, // Rounded corners
-                border: 0,
-                blur: 10, // Increased blur for more pronounced glass effect
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.purple.withOpacity(0.1),
-                    Colors.purple.withOpacity(0.1),
-                  ],
-                  stops: [0.1, 1],
-                ),
-                borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.deepPurple.withOpacity(0.8),
-                    Colors.deepPurple.withOpacity(0.6),
-                    Colors.purple.withOpacity(0.4),
-                    Colors.purple.withOpacity(0.3),
-                  ],
-                  stops: [0.0, 0.1, 0.9, 1.0],
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('LOGIN',
-                          style: TextStyle(
-                           color: Colors.purple,
-                            fontFamily: 'Archives',
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,// Increased font size
-                          )),
-                      SizedBox(height: 10,),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade400,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(15), // Increased radius
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          elevation: 8, // Added shadow
-                          shadowColor:
-                              Colors.black.withOpacity(0.4), // Shadow color
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            isTeacher = false;
-                          });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(isTeacher: false),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset('assets/student.png',
-                                width: 60, height: 60,
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              'STUDENT LOGIN',
-                              style: TextStyle(
-                                fontFamily: 'Archives',
-                                color: Colors.white,
-                                fontSize: 22, // Increased font size
-                                fontWeight: FontWeight.bold, // Bold text
-                              ),
-                            ),
-                          ],
-                        ),
+          SafeArea(
+            child: Column(
+              children: [
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/eliteimg.png',),
+                        fit: BoxFit.contain, // Changed to cover for better fill
                       ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade400,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(15), // Increased radius
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          elevation: 10, // Added shadow
-                          shadowColor:
-                              Colors.black.withOpacity(0.4), // Shadow color
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            isTeacher = true;
-                          });
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(isTeacher: true),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset('assets/teacher.png',
-                                width: 60, height: 60),
-                            SizedBox(height: 10),
-                            Text(
-                              'TEACHER LOGIN',
-                              style: TextStyle(
-                                fontFamily: 'Archives',
-                                color: Colors.white,
-                                fontSize: 22, // Increased font size
-                                fontWeight: FontWeight.bold, // Bold text
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                Flexible(
+                  flex: 4,
+                  child: SingleChildScrollView(
+                    child: GlassmorphicContainer(
+                      margin: EdgeInsets.symmetric(horizontal: 35),
+                      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 100),
+                      width: double.infinity,
+                      height: 450, // Increased height for better spacing
+                      borderRadius: 20, // Rounded corners
+                      border: 0,
+                      blur: 10, // Increased blur for more pronounced glass effect
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.purple.withOpacity(0.1),
+                          Colors.purple.withOpacity(0.1),
+                        ],
+                        stops: [0.1, 1],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.deepPurple.withOpacity(0.8),
+                          Colors.deepPurple.withOpacity(0.6),
+                          Colors.purple.withOpacity(0.4),
+                          Colors.purple.withOpacity(0.3),
+                        ],
+                        stops: [0.0, 0.1, 0.9, 1.0],
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('LOGIN',
+                                style: TextStyle(
+                                 color: Colors.purple,
+                                  fontFamily: 'Archives',
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,// Increased font size
+                                )),
+                            SizedBox(height: 10,),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.purple.shade400,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(15), // Increased radius
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 20),
+                                elevation: 8, // Added shadow
+                                shadowColor:
+                                    Colors.black.withOpacity(0.4), // Shadow color
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isTeacher = false;
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(isTeacher: false),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset('assets/student.png',
+                                      width: 60, height: 60,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'STUDENT LOGIN',
+                                    style: TextStyle(
+                                      fontFamily: 'Archives',
+                                      color: Colors.white,
+                                      fontSize: 22, // Increased font size
+                                      fontWeight: FontWeight.bold, // Bold text
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.purple.shade400,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(15), // Increased radius
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 20),
+                                elevation: 10, // Added shadow
+                                shadowColor:
+                                    Colors.black.withOpacity(0.4), // Shadow color
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isTeacher = true;
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(isTeacher: true),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset('assets/teacher.png',
+                                      width: 60, height: 60),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'TEACHER LOGIN',
+                                    style: TextStyle(
+                                      fontFamily: 'Archives',
+                                      color: Colors.white,
+                                      fontSize: 22, // Increased font size
+                                      fontWeight: FontWeight.bold, // Bold text
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

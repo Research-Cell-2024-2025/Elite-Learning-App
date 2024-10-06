@@ -54,6 +54,14 @@ class _announcementsState extends State<announcements> {
       });
     }
   }
+  Future<void> deleteAnnouncement(String docId) async {
+    try {
+      await FirebaseFirestore.instance.collection('announcements').doc(docId).delete();
+      print('Announcement deleted successfully');
+    } catch (e) {
+      print('Error deleting announcement: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,11 +148,11 @@ class _announcementsState extends State<announcements> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: FirebaseFirestore.instance
                     .collection('announcements')
-                    .orderBy('date', descending: true)
+                    .orderBy('date', descending: false)
                     .snapshots(),
                 builder: (context, snapshots) {
                   if (!snapshots.hasData) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   }
                   List<DocumentSnapshot> announcements = snapshots.data!.docs;
                   return ListView.builder(
@@ -160,21 +168,62 @@ class _announcementsState extends State<announcements> {
                       DateFormat('MMM d, yyyy - h:mm a').format(date);
                       return ListTile(
                         leading: Icon(Icons.announcement,color: Colors.purple,),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            // Confirm before deleting
+                            bool confirm = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Delete Announcement'),
+                                  content: Text(
+                                      'Are you sure you want to delete this announcement?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirm) {
+                              await deleteAnnouncement(
+                                  announcements[index].id);
+                            }
+                          },
+                        ),
                         title: Text(title,
+
                         style: TextStyle(color: Colors.purple,
                         fontWeight: FontWeight.bold),),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(description),
-                            SizedBox(height: 4),
-                            Text(
-                              formattedDate,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(height: 4),
+                                Text(
+                                  formattedDate,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
+
                           ],
                         ),
                       );

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FeeRecordsPage extends StatefulWidget {
   const FeeRecordsPage({super.key});
@@ -26,7 +27,9 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
 
     final snapshot = await _firestore
         .collection('feesRecord')
-        .where('email', isEqualTo: ecode)
+        .doc(currentUser.email)
+        .collection('feeRecords')
+        .orderBy('timestamp',descending: false)
         .get();
 
     setState(() {
@@ -47,7 +50,12 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
           : ListView.builder(
         itemCount: _feeRecords.length,
         itemBuilder: (context, index) {
+
           final record = _feeRecords[index];
+          Timestamp timestamp = record['timestamp'];
+          DateTime date = timestamp.toDate();
+          String formattedDate =
+          DateFormat('MMM d, yyyy - h:mm a').format(date);
           return Card(
             shadowColor: Colors.grey,
 
@@ -62,7 +70,6 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text('Admission No: ${record['admission_no']}'),
-                  Text('Enrollment Code: ${record['enrollment_code']}'),
                   Text('Class: ${record['class']}'),
                   Text('Academic Year: ${record['academic_year']}'),
                   Text('Fee Type: ${record['fee_type']}'),
@@ -83,6 +90,13 @@ class _FeeRecordsPageState extends State<FeeRecordsPage> {
                           : Colors.red,
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(),
+                      Text('${formattedDate}'),
+                    ],
+                  )
                 ],
               ),
             ),

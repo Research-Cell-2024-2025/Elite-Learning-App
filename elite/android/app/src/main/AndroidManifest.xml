@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.elite">
     <application
-        android:label="elite"
+        android:label="Elite Learning Centre"
         android:name="${applicationName}"
         android:icon="@mipmap/elitelogo">
         <activity
