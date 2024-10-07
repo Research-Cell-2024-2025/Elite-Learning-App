@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'auth_tokens/tokens.dart';
@@ -14,15 +15,17 @@ import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDyGS3AJmHhbYBvzPm1hGMPST4WHkzmku8',
-      appId: '1:559329487158:android:5fab07ca02ce81de156b97',
-      messagingSenderId: '559329487158',
-      projectId: 'elitenew-f0b99',
-      storageBucket: 'gs://elitenew-f0b99.appspot.com',
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: dotenv.env['FIREBASE_API_KEY']!,
+      appId: dotenv.env['FIREBASE_APP_ID']!,
+      messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+      projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+      storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'],
     ),
   );
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -53,14 +56,15 @@ void callbackDispatcher() {
     print("Executing task: $task");
 
     await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyDyGS3AJmHhbYBvzPm1hGMPST4WHkzmku8',
-        appId: '1:559329487158:android:5fab07ca02ce81de156b97',
-        messagingSenderId: '559329487158',
-        projectId: 'elitenew-f0b99',
-        storageBucket: 'gs://elitenew-f0b99.appspot.com',
+      options: FirebaseOptions(
+        apiKey: dotenv.env['FIREBASE_API_KEY']!,
+        appId: dotenv.env['FIREBASE_APP_ID']!,
+        messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+        projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+        storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'],
       ),
     );
+
 
     await checkBirthdaysAndSendNotifications();
     return Future.value(true);
