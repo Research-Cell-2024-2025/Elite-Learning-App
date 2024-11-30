@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Add this import for date formatting
+import 'package:cloud_firestore/cloud_firestore.dart';// Add this import for date formatting
 
 class EditStudentPage extends StatefulWidget {
   final String studentId;
@@ -14,7 +14,6 @@ class EditStudentPage extends StatefulWidget {
 
 class _EditStudentPageState extends State<EditStudentPage> {
   final _formKey = GlobalKey<FormState>();
-
   final _firestore = FirebaseFirestore.instance.collection('students');
   final _studentNameController = TextEditingController();
   final _fatherNameController = TextEditingController();
@@ -67,12 +66,9 @@ class _EditStudentPageState extends State<EditStudentPage> {
       _relativePhoneController1.text = studentData['relative_phone1'] ?? '';
       _relativePhoneController2.text = studentData['relative_phone2'] ?? '';
       _relativePhoneController3.text = studentData['relative_phone3'] ?? '';
-      _relativeRelationController1.text =
-          studentData['relative_relation1'] ?? '';
-      _relativeRelationController2.text =
-          studentData['relative_relation2'] ?? '';
-      _relativeRelationController3.text =
-          studentData['relative_relation3'] ?? '';
+      _relativeRelationController1.text = studentData['relative_relation1'] ?? '';
+      _relativeRelationController2.text = studentData['relative_relation2'] ?? '';
+      _relativeRelationController3.text = studentData['relative_relation3'] ?? '';
       _guardianNameController.text = studentData['guardian_name'] ?? '';
       _guardianPhoneController.text = studentData['guardian_phone'] ?? '';
       _guardianEmailController.text = studentData['guardian_email'] ?? '';
@@ -83,8 +79,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
       _selectedGender = studentData['gender'] ?? 'Male';
       _selectedStandard = studentData['standard'] ?? 'Jr.KG';
       _selectedNationality = studentData['nationality'] ?? 'Indian';
-      if (_selectedNationality != 'Indian' &&
-          _selectedNationality != 'Others') {
+      if (_selectedNationality != 'Indian' && _selectedNationality != 'Others') {
         _nationalityController.text = _selectedNationality;
         _selectedNationality = 'Others';
       }
@@ -106,74 +101,42 @@ class _EditStudentPageState extends State<EditStudentPage> {
     }
   }
 
-  void _saveChanges() async {
+  void _saveChanges() {
     if (_formKey.currentState!.validate()) {
-      try {
-        final updatedStudentData = {
-          'student_name': _studentNameController.text,
-          'father_name': _fatherNameController.text,
-          'mother_name': _motherNameController.text,
-          'dob': _dobController.text,
-          'nationality': _selectedNationality == 'Others' &&
-                  _nationalityController.text.isNotEmpty
-              ? _nationalityController.text
-              : _selectedNationality,
-          'address': _addressController.text,
-          'email': _emailController.text,
-          'father_phone': _fatherPhoneController.text,
-          'mother_phone': _motherPhoneController.text,
-          'relative_phone1': _relativePhoneController1.text,
-          'relative_phone2': _relativePhoneController2.text,
-          'relative_phone3': _relativePhoneController3.text,
-          'relative_relation1': _relativeRelationController1.text,
-          'relative_relation2': _relativeRelationController2.text,
-          'relative_relation3': _relativeRelationController3.text,
-          'guardian_name': _guardianNameController.text,
-          'guardian_phone': _guardianPhoneController.text,
-          'guardian_email': _guardianEmailController.text,
-          'guardian_relation': _guardianRelationController.text,
-          'gender': _selectedGender,
-          'standard': _selectedStandard,
-        };
+      final updatedStudentData = {
+        'student_name': _studentNameController.text,
+        'father_name': _fatherNameController.text,
+        'mother_name': _motherNameController.text,
+        'dob': _dobController.text,
+        'nationality': _selectedNationality == 'Others' ? _nationalityController.text : _selectedNationality,
+        'address': _addressController.text,
+        'email': _emailController.text,
+        'father_phone': _fatherPhoneController.text,
+        'mother_phone': _motherPhoneController.text,
+        'relative_phone1': _relativePhoneController1.text,
+        'relative_phone2': _relativePhoneController2.text,
+        'relative_phone3': _relativePhoneController3.text,
+        'relative_relation1': _relativeRelationController1.text,
+        'relative_relation2': _relativeRelationController2.text,
+        'relative_relation3': _relativeRelationController3.text,
+        'guardian_name': _guardianNameController.text,
+        'guardian_phone': _guardianPhoneController.text,
+        'guardian_email': _guardianEmailController.text,
+        'guardian_relation': _guardianRelationController.text,
+        'gender': _selectedGender,
+        'standard': _selectedStandard,
+      };
 
-        await _firestore
-            .doc(widget.studentId)
-            .update(updatedStudentData).then((_){
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Student information updated successfully!')),
-          );
-        })
-            .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Failed to update')));
-          },
-        );
-
-
-        Navigator.pop(context);
-      } on FirebaseException catch (e) {
-        if (e.code == 'unavailable') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content:
-                    Text('No internet connection. Please try again later.')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text('Failed to update student information: ${e.message}')),
-          );
-        }
-      } catch (e) {
-        // Handle any other errors
+      _firestore.doc(widget.studentId).update(updatedStudentData).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An unexpected error occurred: $e')),
+          SnackBar(content: Text('Student information updated successfully!')),
         );
-      }
+        Navigator.pop(context);
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update student information: $error')),
+        );
+      });
     }
   }
 
@@ -183,10 +146,10 @@ class _EditStudentPageState extends State<EditStudentPage> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text(
-          'Edit Student Information',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text('Edit Student Information',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -208,6 +171,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
+
                   controller: _studentNameController,
                   decoration: InputDecoration(labelText: 'Student Name'),
                   validator: (value) {
@@ -219,6 +183,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
+
                   controller: _fatherNameController,
                   decoration: InputDecoration(labelText: 'Father Name'),
                   validator: (value) {
@@ -230,6 +195,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
+
                   controller: _motherNameController,
                   decoration: InputDecoration(labelText: 'Mother Name'),
                   validator: (value) {
@@ -241,8 +207,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 ),
                 DropdownButtonFormField<String>(
                   value: _selectedStandard,
-                  items: ['Jr.KG', 'UKG', 'Day Care', 'PG', 'Nursery']
-                      .map((String value) {
+                  items: ['Jr.KG', 'UKG', 'Day Care', 'PG', 'Nursery'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -305,8 +270,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 if (_selectedNationality == 'Others')
                   TextFormField(
                     controller: _nationalityController,
-                    decoration:
-                        InputDecoration(labelText: 'Specify Nationality'),
+                    decoration: InputDecoration(labelText: 'Specify Nationality'),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please specify nationality';
@@ -363,12 +327,10 @@ class _EditStudentPageState extends State<EditStudentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Emergency contact',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('Emergency contact', style: TextStyle(fontWeight: FontWeight.bold)),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Relative 1',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text('Relative 1', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       TextFormField(
                         controller: _relative1nameController,
@@ -394,6 +356,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.text,
+
                         controller: _relativeRelationController1,
                         decoration: InputDecoration(labelText: 'Relation'),
                         validator: (value) {
@@ -405,8 +368,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Relative 2 (optional)',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text('Relative 2 (optional)', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       TextFormField(
                         controller: _relative2nameController,
@@ -417,6 +379,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                         controller: _relativePhoneController2,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: 'Phone'),
+
                       ),
                       TextFormField(
                         keyboardType: TextInputType.text,
@@ -425,8 +388,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Relative 3 (optional)',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text('Relative 3 (optional)', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       TextFormField(
                         controller: _relative3nameController,
@@ -440,6 +402,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.text,
+
                         controller: _relativeRelationController3,
                         decoration: InputDecoration(labelText: 'Relation'),
                       ),
@@ -448,8 +411,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Guardian details (optional)',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text('Guardian details (optional)', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
@@ -469,8 +431,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 TextFormField(
                   keyboardType: TextInputType.text,
                   controller: _guardianRelationController,
-                  decoration:
-                      InputDecoration(labelText: 'Relation with Student'),
+                  decoration: InputDecoration(labelText: 'Relation with Student'),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(

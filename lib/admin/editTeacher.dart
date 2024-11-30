@@ -55,19 +55,13 @@ class _EditTeacherState extends State<EditTeacher> {
         'gender': _selectedGender,
         'standard': _selectedStandard,
       };
-      await _firestore.doc(widget.email).update(teacherData).then((_){      ScaffoldMessenger.of(context).showSnackBar(
+      await _firestore.doc(widget.email).update(teacherData);
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Teacher updated successfully!')),
-      );}).timeout(
-      const Duration(seconds: 10),
-    onTimeout: () {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Failed to update')));
-    },
-    );
-
+      );
       _key.currentState!.reset();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error updating teacher")));
+      throw Exception(e);
     }
   }
 

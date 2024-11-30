@@ -21,8 +21,8 @@ class _StartPageState extends State<StartPage> {
   void initState() {
     super.initState();
     _checkLoginStatus(); // Check login status when the page is initialized
-  }
 
+  }
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? email = prefs.getString('email');
@@ -36,7 +36,6 @@ class _StartPageState extends State<StartPage> {
       }
     }
   }
-
   Future<bool> _loginUser(String email, String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -47,9 +46,11 @@ class _StartPageState extends State<StartPage> {
       if (user != null && user.emailVerified) {
         return true;
       } else {
+
         return false;
       }
     } catch (e) {
+
       return false;
     }
   }
@@ -57,32 +58,34 @@ class _StartPageState extends State<StartPage> {
   void routeUser() async {
     final user = FirebaseAuth.instance.currentUser!.email;
 
-    final DocumentSnapshot userData =
-        await FirebaseFirestore.instance.collection('students').doc(user).get();
-    final String role = userData['role'];
+    // Fetch user data from Firestore
+    final DocumentSnapshot userData = await FirebaseFirestore.instance.collection('students').doc(user).get();
+
+    // Extract the role from Firestore
+    final String role = userData['role']; // assuming 'role' is the field that stores user roles
+
+    // Check the user's role and navigate accordingly
     if (isTeacher) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                dashboard()), // Assuming this is the dashboard for teachers
+        MaterialPageRoute(builder: (context) => dashboard()), // Assuming this is the dashboard for teachers
       );
     } else if (role == 'admin') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                HomePage()), // Assuming this is the admin page
+        MaterialPageRoute(builder: (context) => HomePage()), // Assuming this is the admin page
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                ParentModule()), // Assuming this is the parent module
+        MaterialPageRoute(builder: (context) => ParentModule()), // Assuming this is the parent module
       );
     }
   }
+
+
+
+
 
   bool isTeacher = false;
 
@@ -96,10 +99,10 @@ class _StartPageState extends State<StartPage> {
             height: MediaQuery.sizeOf(context).height,
             decoration: const BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage('assets/clouds.jpg'),
-              fit: BoxFit.fill,
-              opacity: 0.7,
-            )),
+                  image: AssetImage('assets/clouds.jpg'),
+                  fit: BoxFit.fill,
+                  opacity: 0.7,
+                )),
           ),
           SafeArea(
             child: Column(
@@ -109,9 +112,7 @@ class _StartPageState extends State<StartPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                          'assets/eliteimg.png',
-                        ),
+                        image: AssetImage('assets/eliteimg.png',),
                         fit: BoxFit.contain, // Changed to cover for better fill
                       ),
                     ),
@@ -122,14 +123,12 @@ class _StartPageState extends State<StartPage> {
                   child: SingleChildScrollView(
                     child: GlassmorphicContainer(
                       margin: EdgeInsets.symmetric(horizontal: 35),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 100),
+                      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 100),
                       width: double.infinity,
                       height: 450, // Increased height for better spacing
                       borderRadius: 20, // Rounded corners
                       border: 0,
-                      blur:
-                          10, // Increased blur for more pronounced glass effect
+                      blur: 10, // Increased blur for more pronounced glass effect
                       linearGradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -156,27 +155,24 @@ class _StartPageState extends State<StartPage> {
                           children: [
                             Text('LOGIN',
                                 style: TextStyle(
-                                  color: Colors.purple,
+                                 color: Colors.purple,
                                   fontFamily: 'Archives',
                                   fontSize: 32,
-                                  fontWeight:
-                                      FontWeight.bold, // Increased font size
+                                  fontWeight: FontWeight.bold,// Increased font size
                                 )),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10,),
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(fixedSize: Size(300, 100),
+                              style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.purple.shade400,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      15), // Increased radius
+                                  borderRadius:
+                                      BorderRadius.circular(15), // Increased radius
                                 ),
                                 padding: EdgeInsets.symmetric(
                                     vertical: 20, horizontal: 20),
                                 elevation: 8, // Added shadow
-                                shadowColor: Colors.black
-                                    .withOpacity(0.4), // Shadow color
+                                shadowColor:
+                                    Colors.black.withOpacity(0.4), // Shadow color
                               ),
                               onPressed: () {
                                 setState(() {
@@ -185,22 +181,19 @@ class _StartPageState extends State<StartPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoginPage(Role: "admin"),
+                                    builder: (context) => LoginPage(isTeacher: false),
                                   ),
                                 );
                               },
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Image.asset(
-                                    'assets/admin.png',
-                                    width: 60,
-                                    height: 60,
+                                  Image.asset('assets/student.png',
+                                      width: 60, height: 60,
                                   ),
-                                  SizedBox(width: 10),
+                                  SizedBox(height: 10),
                                   Text(
-                                    'ADMIN LOGIN',
+                                    'STUDENT LOGIN',
                                     style: TextStyle(
                                       fontFamily: 'Archives',
                                       color: Colors.white,
@@ -213,17 +206,17 @@ class _StartPageState extends State<StartPage> {
                             ),
                             SizedBox(height: 20),
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(fixedSize: Size(300, 100),
+                              style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.purple.shade400,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      15), // Increased radius
+                                  borderRadius:
+                                      BorderRadius.circular(15), // Increased radius
                                 ),
                                 padding: EdgeInsets.symmetric(
                                     vertical: 20, horizontal: 20),
                                 elevation: 10, // Added shadow
-                                shadowColor: Colors.black
-                                    .withOpacity(0.4), // Shadow color
+                                shadowColor:
+                                    Colors.black.withOpacity(0.4), // Shadow color
                               ),
                               onPressed: () {
                                 setState(() {
@@ -232,12 +225,11 @@ class _StartPageState extends State<StartPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoginPage(Role: "teacher"),
+                                    builder: (context) => LoginPage(isTeacher: true),
                                   ),
                                 );
                               },
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Image.asset('assets/teacher.png',
@@ -255,54 +247,6 @@ class _StartPageState extends State<StartPage> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 20),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(fixedSize: Size(300, 100),
-                                backgroundColor: Colors.purple.shade400,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      15), // Increased radius
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 20),
-                                elevation: 8, // Added shadow
-                                shadowColor: Colors.black
-                                    .withOpacity(0.4), // Shadow color
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isTeacher = false;
-                                });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoginPage(Role: "student"),
-                                  ),
-                                );
-                              },
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    'assets/student.png',
-                                    width: 60,
-                                    height: 60,
-                                  ),
-
-                                  Text(
-                                    'STUDENT LOGIN',
-                                    style: TextStyle(
-                                      fontFamily: 'Archives',
-                                      color: Colors.white,
-                                      fontSize: 22, // Increased font size
-                                      fontWeight: FontWeight.bold, // Bold text
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
                           ],
                         ),
                       ),

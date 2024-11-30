@@ -46,7 +46,7 @@ class ContactUs extends StatelessWidget {
                 ? Image.network(
               imageUrl,
               height: 150,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Container(

@@ -58,7 +58,7 @@ class _ImagesState extends State<Images> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Uploading Images: $e ")));
+      print("Error Uploading Images: $e ");
     }
   }
 
@@ -71,7 +71,7 @@ class _ImagesState extends State<Images> {
         images.removeWhere((image) => image['url'] == imageUrl);
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Deleting Image: $e")));
+      print("Error Deleting Image: $e");
     }
   }
 

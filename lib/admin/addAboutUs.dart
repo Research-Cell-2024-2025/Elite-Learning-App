@@ -69,15 +69,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
         throw 'Please fill in all text fields.';
       }
 
-      String? ownerImageUrl = await _uploadFile(
-          _ownerImage, 'owner_image.${_ownerImage?.extension ?? 'jpg'}');
-      String? directorImageUrl = await _uploadFile(_directorImage,
-          'director_image.${_directorImage?.extension ?? 'jpg'}');
+      String? ownerImageUrl = await _uploadFile(_ownerImage, 'owner_image.${_ownerImage?.extension ?? 'jpg'}');
+      String? directorImageUrl = await _uploadFile(_directorImage, 'director_image.${_directorImage?.extension ?? 'jpg'}');
 
-      await FirebaseFirestore.instance
-          .collection('aboutUs')
-          .doc('default')
-          .set({
+      await FirebaseFirestore.instance.collection('aboutUs').doc('default').set({
         'title': title,
         'about': about,
         'ownerImageUrl': ownerImageUrl,
@@ -131,8 +126,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 fillColor: Colors.grey.withOpacity(0.2),
                 labelText: 'Title',
                 labelStyle: TextStyle(color: Colors.purple),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             SizedBox(height: 20),
@@ -145,8 +139,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 fillColor: Colors.grey.withOpacity(0.2),
                 labelText: 'Body',
                 labelStyle: TextStyle(color: Colors.purple),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
             SizedBox(height: 20),
@@ -154,15 +147,13 @@ class _AboutUsPageState extends State<AboutUsPage> {
               onPressed: () => _pickFile(true),
               child: Text('Select Owner Image'),
             ),
-            if (_ownerImage != null)
-              Text('Owner image selected: ${_ownerImage!.name}'),
+            if (_ownerImage != null) Text('Owner image selected: ${_ownerImage!.name}'),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _pickFile(false),
               child: Text('Select Director Image'),
             ),
-            if (_directorImage != null)
-              Text('Director image selected: ${_directorImage!.name}'),
+            if (_directorImage != null) Text('Director image selected: ${_directorImage!.name}'),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isLoading ? null : _submit,
@@ -184,8 +175,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 if (!snapshot.hasData || !snapshot.data!.exists) {
                   return Text('No data available');
                 }
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
+                Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

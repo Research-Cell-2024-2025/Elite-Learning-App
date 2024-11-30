@@ -33,7 +33,7 @@ class _EventsState extends State<Events> {
         path = localPath;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching event')));
+      print('Error: $e');
     }
   }
 

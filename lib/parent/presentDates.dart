@@ -50,7 +50,7 @@ class _presentDatesState extends State<presentDates> {
 
       return formattedDates;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching present dates: $e')));
+      print('Error fetching present dates: $e');
       return [];
     }
   }

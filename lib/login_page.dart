@@ -14,9 +14,9 @@ import 'package:elite/parent/parent_module.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  final String Role;
+  final bool isTeacher;
 
-  const LoginPage({super.key, required this.Role});
+  const LoginPage({super.key, required this.isTeacher});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -61,11 +61,10 @@ class _LoginPageState extends State<LoginPage> {
     User? user = auth.currentUser;
     if (user != null) {
       try {
-        DocumentSnapshot? documentSnapshot;
-        QuerySnapshot? querySnapshot;
+        DocumentSnapshot documentSnapshot;
         String? userId = user.email;
 
-        if (widget.Role == "teacher") {
+        if (widget.isTeacher) {
           documentSnapshot = await FirebaseFirestore.instance
               .collection('teacher')
               .doc(userId)
@@ -77,35 +76,28 @@ class _LoginPageState extends State<LoginPage> {
               .get();
         }
 
-
-
-        if (documentSnapshot != null && documentSnapshot.exists) {
+        if (documentSnapshot.exists) {
           Map<String, dynamic> data =
               documentSnapshot.data() as Map<String, dynamic>;
-          String role = data['role'];
-          if (role != widget.Role) {
-            _showErrorSnackBar(
-                'Invalid role. Please log in with the correct credentials.');
-            auth.signOut();
-            return;
-          }
 
+          // Update token if it's missing or different
           if (data['token'] != token) {
             await FirebaseFirestore.instance
-                .collection(widget.Role == "teacher" ? 'teacher' : 'students')
+                .collection(widget.isTeacher ? 'teacher' : 'students')
                 .doc(userId)
                 .set({'token': token}, SetOptions(merge: true));
           }
 
+          // Check if 'standard' field exists
           if (data.containsKey('standard')) {
             final standard = data['standard'];
             await messaging.subscribeToTopic(standard);
-          }
-          else {
+          } else {
             _showErrorSnackBar('Standard field is missing.');
           }
 
-
+          // Navigation based on 'role'
+          String role = data['role'];
           if (role == "admin") {
             Navigator.pushReplacement(
               context,
@@ -174,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
       messaging.subscribeToTopic('birthdays');
 
       try {
-
+        // Try signing in with email and password
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
@@ -186,6 +178,8 @@ class _LoginPageState extends State<LoginPage> {
             await prefs.setString('email', email);
             await prefs.setString('password', password);
 
+            // Retrieve the teacher/student status here
+
             routeUser();
           } else {
             await user.sendEmailVerification();
@@ -196,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           try {
+            // If the user is not found, create a new account
             UserCredential userCredential = await FirebaseAuth.instance
                 .createUserWithEmailAndPassword(
                     email: email, password: password);
@@ -260,10 +255,10 @@ class _LoginPageState extends State<LoginPage> {
             decoration: const BoxDecoration(
                 image: DecorationImage(
               image: AssetImage('assets/clouds.jpg'),
-              fit: BoxFit.fill,
-              // colorFilter: ColorFilter.mode(Colors.purple,BlendMode.softLight),
-              opacity: 0.7,
-              //filterQuality: FilterQuality.low
+                  fit: BoxFit.fill,
+                // colorFilter: ColorFilter.mode(Colors.purple,BlendMode.softLight),
+                  opacity: 0.7,
+                  //filterQuality: FilterQuality.low
             )),
           ),
           SafeArea(
