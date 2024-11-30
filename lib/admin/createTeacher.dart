@@ -51,7 +51,7 @@ class _CreateteacherState extends State<Createteacher> {
 
     }
     catch(e){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occurred while creating Teacher")));
+     throw new Exception(e);
          }
   }
       void _submitForm() {

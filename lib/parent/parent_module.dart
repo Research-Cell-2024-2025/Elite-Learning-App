@@ -226,8 +226,8 @@ class _ParentModuleState extends State<ParentModule> {
 
       body: Column(
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height / 3,
+          Expanded(
+            flex: 4,
             child: CarouselSlider(
               options: CarouselOptions(
                 height: 300,
@@ -247,7 +247,7 @@ class _ParentModuleState extends State<ParentModule> {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                       width: MediaQuery.of(context).size.width / 1.2,
+                      width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.symmetric(horizontal: 7,vertical: 5),
                       padding: EdgeInsets.all(2),
                       decoration: BoxDecoration(
@@ -275,10 +275,9 @@ class _ParentModuleState extends State<ParentModule> {
               }).toList(),
             ),
           ),
-
-          Flexible(
+          Expanded(
+            flex: 6, // 60% of the screen height
             child: Container(
-              // height: MediaQuery.of(context).size.height / 3,
               alignment: Alignment.center,
               margin: EdgeInsets.all(20),
               padding: EdgeInsets.all(5),
@@ -301,75 +300,131 @@ class _ParentModuleState extends State<ParentModule> {
               child: Column(
                 children: [
                   Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        // Calculate the number of columns based on the screen width
-                        int crossAxisCount = (constraints.maxWidth / 100).floor(); // Adjust 150 to your preferred item width
-                        return GridView.count(
-                          crossAxisCount: crossAxisCount,
-                          children: moduleItems.map(
-                                (module) => GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => module.route),
-                                );
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 1.0,
-                                  ),
+                    child: GridView.count(
+                     // physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      children: moduleItems.sublist(0, moduleItems.length).map(
+                            (module) => GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => module.route),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
                                 ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: module.color,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          module.icon,
-                                          size: 30.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 5.0),
-                                    Text(
-                                      module.title,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.0,
                               ),
                             ),
-                          ).toList(),
-                        );
-                      },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: module.color,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      module.icon,
+                                      size: 30.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 5.0),
+                                Text(
+                                  module.title,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ).toList(),
                     ),
-                  )
+                  ),
+                  // Container(
+                  //   margin: EdgeInsets.fromLTRB(10, 4, 10, 10),
+                  //   padding: EdgeInsets.symmetric(
+                  //     horizontal: MediaQuery.of(context).size.width * 0.05,
+                  //     vertical: MediaQuery.of(context).size.height * 0.02,
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.withOpacity(0.5),
+                  //         spreadRadius: 2,
+                  //         blurRadius: 5,
+                  //         offset: Offset(0, 3),
+                  //       ),
+                  //     ],
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //     border: Border.all(
+                  //       color: Colors.white,
+                  //       width: 1.0,
+                  //     ),
+                  //   ),
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(builder: (context) => moduleItems.last.route),
+                  //       );
+                  //     },
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         Container(
+                  //           alignment: Alignment.center,
+                  //           decoration: BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             color: moduleItems.last.color,
+                  //           ),
+                  //           child: Padding(
+                  //             padding: const EdgeInsets.all(8.0),
+                  //             child: Icon(
+                  //               moduleItems.last.icon,
+                  //               size: 30.0,
+                  //               color: Colors.white,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         SizedBox(height: 5.0),
+                  //         Text(
+                  //           moduleItems.last.title,
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             fontSize: 12.0,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.grey[800],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

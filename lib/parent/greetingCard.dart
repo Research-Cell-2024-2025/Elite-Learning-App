@@ -22,12 +22,15 @@ class GreetingCard extends StatelessWidget {
     DateTime today = DateTime.now();
     DateTime yesterday = today.subtract(Duration(days: 1));
 
+    // Check if the date is today
     if (DateFormat('yyyy-MM-dd').format(date) == DateFormat('yyyy-MM-dd').format(today)) {
-      return "🎉 Happy Birthday, $name! 🎉";
+      return "🎉 Happy Birthday, $name! 🎉"; // Today's birthday message
     }
+    // Check if the date is yesterday
     else if (DateFormat('yyyy-MM-dd').format(date) == DateFormat('yyyy-MM-dd').format(yesterday)) {
       return "🎉 Yesterday was $name's birthday! 🎉"; // Yesterday's birthday message
     }
+    // Otherwise, show the specific date of the birthday
     else {
       return "$name's birthday was on ${DateFormat('d MMM yyyy').format(date)}"; // E.g., "27 Sep 2024 was $name's birthday"
     }

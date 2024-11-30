@@ -23,6 +23,7 @@ class _BirthdayState extends State<Birthday> {
   @override
   void initState() {
     super.initState();
+    checkBirthdaysAndSendNotifications();
   }
 
   Future<void> checkBirthdaysAndSendNotifications() async {
@@ -42,7 +43,7 @@ class _BirthdayState extends State<Birthday> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('failed to send notification')));
+      print('failed notiiiiiii');
     }
   }
 

@@ -50,7 +50,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         print('Document does not exist');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching attendance: $e')));
+      print('Error fetching attendance: $e');
     }
   }
 
@@ -78,7 +78,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching total lectures: $e')));
+      print('Error fetching total lectures: $e');
     }
   }
 

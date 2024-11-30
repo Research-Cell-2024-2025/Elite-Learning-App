@@ -93,6 +93,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
 
   Future<void> add() async {
     try {
+
       final studentData = {
         'student_name': _studentNameController.text,
         'email': _emailController.text,
@@ -134,42 +135,38 @@ class _AddFeesPageState extends State<AddFeesPage> {
       );
     }
   }
-
   Future<void> sendFeesNotification() async {
     final String accessToken = await getAccessToken();
-    FirebaseFirestore fire = FirebaseFirestore.instance;
-    final data = await fire
-        .collection('students')
-        .where('email', isEqualTo: _emailController.text)
-        .get();
+    FirebaseFirestore fire =  FirebaseFirestore.instance;
+    final data = await fire.collection('students').where('email', isEqualTo: _emailController.text).get();
     final token = data.docs.first.data()['token'];
-    final url =
-        "https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send";
+    final url = "https://fcm.googleapis.com/v1/projects/elitenew-f0b99/messages:send";
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
     };
     final body = jsonEncode({
       'message': {
-        'token': '$token',
-        'notification': {
+        'token':'$token',
+        'notification':{
           'title': 'Fees Reminder',
           'body': 'Open Elite Learning Centre to see Fee reminder'
         }
       }
     });
-    final result =
-        await http.post(Uri.parse(url), headers: headers, body: body);
-    if (result.statusCode == 200) {
-      print("Fees Reminder sent");
-    } else {
-      print("failed to send");
-    }
+   final result = await http.post(Uri.parse(url),headers: headers ,body: body);
+   if(result.statusCode==200){
+     print("Fees Reminder sent");
+   }
+   else{
+     print("failed to send");
+   }
   }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       add();
+
     }
   }
 
@@ -179,10 +176,10 @@ class _AddFeesPageState extends State<AddFeesPage> {
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.purple,
-        title: Text(
-          'Personal Information Form',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: Text('Personal Information Form',
+          style: TextStyle(
+              fontWeight: FontWeight.bold
+          ),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -346,17 +343,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
 
                 DropdownButtonFormField<String>(
                   value: _selectedAcademicYear,
-                  items: [
-                    '2024-25',
-                    '2025-26',
-                    '2026-27',
-                    '2027-28',
-                    '2028-29',
-                    '2029-30',
-                    '2030-31',
-                    '2031-32',
-                    '2032-33'
-                  ].map((String value) {
+                  items: ['2024-25','2025-26','2026-27','2027-28','2028-29','2029-30','2030-31','2031-32','2032-33'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -369,6 +356,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                   },
                   decoration: InputDecoration(labelText: 'Academic Year'),
                 ),
+
 
                 TextFormField(
                   controller: _installmentNameController,
@@ -428,8 +416,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                 TextFormField(
                   controller: _lateFeesController2,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      labelText: 'Late Fee', hintText: 'Set as 0 if none'),
+                  decoration: InputDecoration(labelText: 'Late Fee',hintText: 'Set as 0 if none'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter this field';
@@ -461,7 +448,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
                 ),
                 DropdownButtonFormField<String>(
                   value: _selectedPaymentMode,
-                  items: ['Cash', 'Online', 'Check'].map((String value) {
+                  items: ['Cash','Online','Check'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -489,8 +476,7 @@ class _AddFeesPageState extends State<AddFeesPage> {
 
                 DropdownButtonFormField<String>(
                   value: _selectedPaymentStatus,
-                  items:
-                      ['Pending', 'Successful', 'Failed'].map((String value) {
+                  items: ['Pending', 'Successful','Failed'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
