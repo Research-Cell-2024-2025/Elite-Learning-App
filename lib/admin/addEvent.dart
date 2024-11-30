@@ -23,11 +23,12 @@ class _AddEventsState extends State<AddEvents> {
   @override
   void initState() {
     super.initState();
-    Firebase.initializeApp(); // Ensure Firebase is initialized
-    _fetchEventUrl(); // Fetch event URL on initialization
+    Firebase.initializeApp();
+    _fetchEventUrl();
   }
 
   Future<void> pickAndUploadPdf() async {
+    try {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -36,7 +37,7 @@ class _AddEventsState extends State<AddEvents> {
     if (result != null) {
       File file = File(result.files.single.path!);
       setState(() {
-        uploadStatus = null; // Reset status before uploading
+        uploadStatus = null;
         isUploading = true;
       });
       await uploadPdfFile(file);
@@ -45,11 +46,14 @@ class _AddEventsState extends State<AddEvents> {
         uploadStatus = 'No file selected';
       });
     }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occurred while uploading pdf")));
+    }
   }
 
   Future<void> uploadPdfFile(File file) async {
     try {
-      String filePath = 'events/Time.pdf'; // Use a static path for events
+      String filePath = 'events/Time.pdf';
       final storageRef = FirebaseStorage.instance.ref(filePath);
       await storageRef.putFile(file);
       final String downloadURL = await storageRef.getDownloadURL();

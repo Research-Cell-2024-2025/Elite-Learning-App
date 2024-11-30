@@ -27,6 +27,11 @@ class _announcementsState extends State<announcements> {
   }
 
   Future<void> pushNotification(String title, String description) async {
+    try{
+      if(title.isEmpty && description.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Empty input is not allowed")));
+      }
+      else {
     final String token = await getAccessToken();
     FirebaseFirestore fire = FirebaseFirestore.instance;
     final url =
@@ -52,8 +57,11 @@ class _announcementsState extends State<announcements> {
         'description': description,
         'date': Timestamp.now(),
       });
-    }
-  }
+    }}}
+        catch (e) {
+      SnackBar(content: Text('Error sending push notification: $e'));
+  }}
+
   Future<void> deleteAnnouncement(String docId) async {
     try {
       await FirebaseFirestore.instance.collection('announcements').doc(docId).delete();

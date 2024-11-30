@@ -50,6 +50,11 @@ class _diaryTeacherState extends State<diaryTeacher> {
   }
 
   Future<void> pushNotification(String title, String description) async {
+    try{
+      if(title.isEmpty && description.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Empty fields are not allowed")));
+      }
+      else{
     final String token = await getAccessToken();
     FirebaseFirestore fire = FirebaseFirestore.instance;
     final url =
@@ -76,7 +81,10 @@ class _diaryTeacherState extends State<diaryTeacher> {
         'standard': standard,
         'date': Timestamp.now(),
       });
-    }
+    }}}
+        catch(e){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error adding diary work")));
+        }
 
   }
 
@@ -166,7 +174,7 @@ class _diaryTeacherState extends State<diaryTeacher> {
                   ElevatedButton(
                       onPressed: () => pushNotification(
                           _titleController.text, _bodyController.text),
-                      child: Text('Push'))
+                      child: Text('Add to Diary'))
                 ],
               ),
             ),
